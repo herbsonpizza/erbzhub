@@ -377,87 +377,56 @@ end
 
 timeOfDayButton.MouseButton1Click:Connect(cycleTimeOfDay)
 
+-- === FOV Input Field ===
+local fovInputFrame = Instance.new("Frame")
+fovInputFrame.Size = UDim2.new(0.8, 0, 0, 60)
+fovInputFrame.Position = UDim2.new(0.1, 0, 0, 250)
+fovInputFrame.BackgroundColor3 = theme.ButtonColor
+fovInputFrame.Parent = scrollFrame
+roundify(fovInputFrame, 5)
 
--- === FOV Slider ===
-local fovSlider = Instance.new("Frame")
-fovSlider.Size = UDim2.new(0.8, 0, 0, 30)
-fovSlider.Position = UDim2.new(0.1, 0, 0, 250)
-fovSlider.BackgroundColor3 = theme.ButtonColor
-fovSlider.Parent = scrollFrame
-roundify(fovSlider, 5)
+-- TextBox for user to input FOV value
+local fovInputBox = Instance.new("TextBox")
+fovInputBox.Size = UDim2.new(0.6, 0, 0, 40)
+fovInputBox.Position = UDim2.new(0.1, 0, 0.1, 0)
+fovInputBox.Text = "70"  -- Default value
+fovInputBox.TextColor3 = theme.TextColor
+fovInputBox.Font = Enum.Font.SourceSans
+fovInputBox.TextSize = 18
+fovInputBox.BackgroundTransparency = 1
+fovInputBox.BorderSizePixel = 1
+fovInputBox.BorderColor3 = theme.ButtonColor
+fovInputBox.Parent = fovInputFrame
 
-local fovSliderButton = Instance.new("Frame")
-fovSliderButton.Size = UDim2.new(0, 30, 0, 30)
-fovSliderButton.Position = UDim2.new(0, 0, 0, 0)
-fovSliderButton.BackgroundColor3 = theme.ButtonHover
-fovSliderButton.Parent = fovSlider
-roundify(fovSliderButton, 5)
+-- Button to apply the custom FOV value
+local applyFovButton = Instance.new("TextButton")
+applyFovButton.Size = UDim2.new(0.3, 0, 0, 40)
+applyFovButton.Position = UDim2.new(0.7, 0, 0.1, 0)
+applyFovButton.Text = "Apply FOV"
+applyFovButton.BackgroundColor3 = theme.ButtonColor
+applyFovButton.TextColor3 = theme.TextColor
+applyFovButton.Font = Enum.Font.SourceSans
+applyFovButton.TextSize = 20
+applyFovButton.AutoButtonColor = false
+applyFovButton.Parent = fovInputFrame
+roundify(applyFovButton, 6)
 
-local fovValue = Instance.new("TextLabel")
-fovValue.Size = UDim2.new(0.2, 0, 0, 30)
-fovValue.Position = UDim2.new(0.9, 0, 0, 250)
-fovValue.Text = "FOV: 70"
-fovValue.TextColor3 = theme.TextColor
-fovValue.Font = Enum.Font.SourceSans
-fovValue.TextSize = 18
-fovValue.BackgroundTransparency = 1
-fovValue.Parent = scrollFrame
+-- Function to validate and apply the FOV
+local function applyCustomFov()
+    local fovValue = tonumber(fovInputBox.Text)
 
--- Reset FOV Button
-local resetFovButton = Instance.new("TextButton")
-resetFovButton.Size = UDim2.new(0.8, 0, 0, 40)
-resetFovButton.Position = UDim2.new(0.1, 0, 0, 300)  -- Position it below the FOV slider
-resetFovButton.Text = "Reset FOV"
-resetFovButton.BackgroundColor3 = theme.ButtonColor
-resetFovButton.TextColor3 = theme.TextColor
-resetFovButton.Font = Enum.Font.SourceSans
-resetFovButton.TextSize = 20
-resetFovButton.AutoButtonColor = false
-resetFovButton.Parent = scrollFrame
-roundify(resetFovButton, 6)
-
--- Slider Interaction
-local dragging = false
-fovSliderButton.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        dragging = true
+    -- Ensure the input is a valid number within the allowed range (20-180)
+    if fovValue and fovValue >= 20 and fovValue <= 180 then
+        workspace.CurrentCamera.FieldOfView = fovValue
+        -- Update the TextBox to show the applied FOV
+        fovInputBox.Text = tostring(fovValue)
+    else
+        -- Show an error message or reset to default value if input is invalid
+        fovInputBox.Text = "Invalid FOV"
+        wait(1)
+        fovInputBox.Text = "70"  -- Reset to default after showing the error
     end
-end)
+end
 
-fovSliderButton.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        dragging = false
-    end
-end)
-
-fovSliderButton.InputChanged:Connect(function(input)
-    if dragging then
-        local mousePosition = UserInputService:GetMouseLocation().X
-        local sliderPosition = fovSlider.AbsolutePosition.X
-        local sliderWidth = fovSlider.AbsoluteSize.X
-        local newPos = math.clamp(mousePosition - sliderPosition, 0, sliderWidth)
-        
-        -- Update the position of the slider button
-        fovSliderButton.Position = UDim2.new(0, newPos, 0, 0)
-        
-        -- Corrected FOV calculation (scaled to max 180 when the slider is at 100%)
-        local newFOV = math.floor(20 + (newPos / sliderWidth) * 160)  -- Range from 20 to 180
-        fovValue.Text = tostring(newFOV)  -- Update the label with the new FOV value
-        
-        -- Apply the new FOV value to the camera
-        workspace.CurrentCamera.FieldOfView = newFOV
-    end
-end)
-
--- Reset FOV Button functionality
-resetFovButton.MouseButton1Click:Connect(function()
-    -- Set the FOV back to 70
-    workspace.CurrentCamera.FieldOfView = 70
-
-    -- Reset the slider button position to match FOV of 70
-    local fovPercentage = (70 - 20) / 160  -- The percentage of the slider (70 is the midpoint of 20 to 180)
-    fovSliderButton.Position = UDim2.new(fovPercentage, 0, 0, 0)
-
-    -- Update the FOV value display
-    fovValue.Text = "FOV: 70"
-end)
+-- Apply the FOV when the button is clicked
+applyFovButton.MouseButton1Click:Connect(applyCustomFov)
