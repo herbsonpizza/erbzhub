@@ -379,45 +379,29 @@ timeOfDayButton.MouseButton1Click:Connect(cycleTimeOfDay)
 
 
 -- === FOV Slider ===
-local fovSliderFrame = Instance.new("Frame")
-fovSliderFrame.Size = UDim2.new(1, -20, 0, 60)
-fovSliderFrame.Position = UDim2.new(0, 10, 0, 270)  -- Position it just below the "Cycle Time of Day" button
-fovSliderFrame.BackgroundTransparency = 1
-fovSliderFrame.Parent = scrollFrame
-
--- Slider Label
-local fovLabel = Instance.new("TextLabel")
-fovLabel.Size = UDim2.new(1, 0, 0, 20)
-fovLabel.Position = UDim2.new(0, 0, 0, 0)
-fovLabel.Text = "Field of View"
-fovLabel.TextColor3 = theme.TextColor
-fovLabel.Font = Enum.Font.SourceSans
-fovLabel.TextSize = 18
-fovLabel.BackgroundTransparency = 1
-fovLabel.Parent = fovSliderFrame
-
--- Slider UI
 local fovSlider = Instance.new("Frame")
-fovSlider.Size = UDim2.new(1, -20, 0, 10)
-fovSlider.Position = UDim2.new(0, 10, 0, 30)
+fovSlider.Size = UDim2.new(0.8, 0, 0, 30)
+fovSlider.Position = UDim2.new(0.1, 0, 0, 250)
 fovSlider.BackgroundColor3 = theme.ButtonColor
-fovSlider.Parent = fovSliderFrame
+fovSlider.Parent = scrollFrame
 roundify(fovSlider, 5)
 
 local fovSliderButton = Instance.new("Frame")
-fovSliderButton.Size = UDim2.new(0, 10, 1, 0)
+fovSliderButton.Size = UDim2.new(0, 30, 0, 30)
+fovSliderButton.Position = UDim2.new(0, 0, 0, 0)
 fovSliderButton.BackgroundColor3 = theme.ButtonHover
 fovSliderButton.Parent = fovSlider
+roundify(fovSliderButton, 5)
 
 local fovValue = Instance.new("TextLabel")
-fovValue.Size = UDim2.new(0, 40, 0, 20)
-fovValue.Position = UDim2.new(1, 10, 0, 0)
-fovValue.Text = "70"
+fovValue.Size = UDim2.new(0.2, 0, 0, 30)
+fovValue.Position = UDim2.new(0.9, 0, 0, 250)
+fovValue.Text = "FOV: 70"
 fovValue.TextColor3 = theme.TextColor
 fovValue.Font = Enum.Font.SourceSans
 fovValue.TextSize = 18
 fovValue.BackgroundTransparency = 1
-fovValue.Parent = fovSliderFrame
+fovValue.Parent = scrollFrame
 
 -- Slider Interaction
 local dragging = false
@@ -439,10 +423,15 @@ fovSliderButton.InputChanged:Connect(function(input)
         local sliderPosition = fovSlider.AbsolutePosition.X
         local sliderWidth = fovSlider.AbsoluteSize.X
         local newPos = math.clamp(mousePosition - sliderPosition, 0, sliderWidth)
+        
+        -- Update the position of the slider button
         fovSliderButton.Position = UDim2.new(0, newPos, 0, 0)
+        
+        -- Corrected FOV calculation (scaled to max 180 when the slider is at 100%)
         local newFOV = math.floor(20 + (newPos / sliderWidth) * 160)  -- Range from 20 to 180
-        fovValue.Text = tostring(newFOV)
+        fovValue.Text = tostring(newFOV)  -- Update the label with the new FOV value
+        
+        -- Apply the new FOV value to the camera
         workspace.CurrentCamera.FieldOfView = newFOV
     end
 end)
-
