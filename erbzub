@@ -345,14 +345,14 @@ end)
 -- === Time of Day Button ===
 local timeOfDayButton = Instance.new("TextButton")
 timeOfDayButton.Size = UDim2.new(1, -20, 0, 50)
-timeOfDayButton.Position = UDim2.new(0, 10, 0, 200)
+timeOfDayButton.Position = UDim2.new(0, 10, 0, 200)  -- Position it just below the AntiVoid button
 timeOfDayButton.Text = "Cycle Time of Day"
 timeOfDayButton.BackgroundColor3 = theme.ButtonColor
 timeOfDayButton.TextColor3 = theme.TextColor
 timeOfDayButton.Font = Enum.Font.SourceSans
 timeOfDayButton.TextSize = 22
 timeOfDayButton.AutoButtonColor = false
-timeOfDayButton.Parent = scrollFrame
+timeOfDayButton.Parent = scrollFrame  -- Parent it to the main scroll frame
 roundify(timeOfDayButton, 6)
 
 -- === Time of Day Cycle Function ===
