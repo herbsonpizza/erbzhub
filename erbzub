@@ -343,37 +343,37 @@ themeSwitchButton.MouseButton1Click:Connect(function()
     applyTheme(themes[currentThemeName])
 end)
 
--- === Time of Day Button ===
-local timeOfDayButton = Instance.new("TextButton")
-timeOfDayButton.Size = UDim2.new(1, -20, 0, 50)
-timeOfDayButton.Position = UDim2.new(0, 10, 0, 200)
-timeOfDayButton.Text = "Cycle Time of Day"
-timeOfDayButton.BackgroundColor3 = theme.ButtonColor
-timeOfDayButton.TextColor3 = theme.TextColor
-timeOfDayButton.Font = Enum.Font.SourceSans
-timeOfDayButton.TextSize = 22
-timeOfDayButton.AutoButtonColor = false
-timeOfDayButton.Parent = scrollFrame
-roundify(timeOfDayButton, 6)
+-- === Cycle Time of Day Button ===
+local cycleTimeButton = Instance.new("TextButton")
+cycleTimeButton.Size = UDim2.new(1, -20, 0, 50)
+cycleTimeButton.Position = UDim2.new(0, 10, 0, 210)
+cycleTimeButton.Text = "Cycle Time of Day"
+cycleTimeButton.BackgroundColor3 = theme.ButtonColor
+cycleTimeButton.TextColor3 = theme.TextColor
+cycleTimeButton.Font = Enum.Font.SourceSans
+cycleTimeButton.TextSize = 22
+cycleTimeButton.AutoButtonColor = false
+cycleTimeButton.Parent = scrollFrame
+roundify(cycleTimeButton, 6)
 
--- === Time of Day Cycle Function ===
-local timeOfDayCycle = {
-    "14:00:00",  -- Daytime (2:00 PM)
-    "18:00:00",  -- Sunset (6:00 PM)
-    "00:00:00",  -- Night (12:00 AM)
-    "06:00:00",  -- Sunrise (6:00 AM)
-    "12:00:00",  -- Noon (12:00 PM)
-}
-
-local currentTimeIndex = 1  -- Start at Daytime (2:00 PM)
-
+-- === Time Cycle Functionality ===
 local function cycleTimeOfDay()
-    currentTimeIndex = currentTimeIndex + 1
-    if currentTimeIndex > #timeOfDayCycle then
-        currentTimeIndex = 1  -- Reset to the first time in the cycle
+    local currentTime = Lighting.ClockTime
+    
+    -- Cycle time between 0 (12:00 AM) to 24 (12:00 PM)
+    if currentTime >= 6 and currentTime < 18 then
+        -- If daytime, set to evening
+        Lighting.ClockTime = 18
+    elseif currentTime >= 18 and currentTime < 24 then
+        -- If evening, set to night
+        Lighting.ClockTime = 0
+    else
+        -- If night, set to morning
+        Lighting.ClockTime = 6
     end
-    Lighting.TimeOfDay = timeOfDayCycle[currentTimeIndex]  -- Set the new time of day
-    timeOfDayButton.Text = "Time: " .. timeOfDayCycle[currentTimeIndex]  -- Update the button text
 end
 
-timeOfDayButton.MouseButton1Click:Connect(cycleTimeOfDay)
+-- Connect the button to cycle the time of day
+cycleTimeButton.MouseButton1Click:Connect(function()
+    cycleTimeOfDay()
+end)
