@@ -403,6 +403,19 @@ fovValue.TextSize = 18
 fovValue.BackgroundTransparency = 1
 fovValue.Parent = scrollFrame
 
+-- Reset FOV Button
+local resetFovButton = Instance.new("TextButton")
+resetFovButton.Size = UDim2.new(0.8, 0, 0, 40)
+resetFovButton.Position = UDim2.new(0.1, 0, 0, 290)  -- Position it below the FOV slider
+resetFovButton.Text = "Reset FOV"
+resetFovButton.BackgroundColor3 = theme.ButtonColor
+resetFovButton.TextColor3 = theme.TextColor
+resetFovButton.Font = Enum.Font.SourceSans
+resetFovButton.TextSize = 20
+resetFovButton.AutoButtonColor = false
+resetFovButton.Parent = scrollFrame
+roundify(resetFovButton, 6)
+
 -- Slider Interaction
 local dragging = false
 fovSliderButton.InputBegan:Connect(function(input)
@@ -434,4 +447,17 @@ fovSliderButton.InputChanged:Connect(function(input)
         -- Apply the new FOV value to the camera
         workspace.CurrentCamera.FieldOfView = newFOV
     end
+end)
+
+-- Reset FOV Button functionality
+resetFovButton.MouseButton1Click:Connect(function()
+    -- Set the FOV back to 70
+    workspace.CurrentCamera.FieldOfView = 70
+
+    -- Reset the slider button position to match FOV of 70
+    local fovPercentage = (70 - 20) / 160  -- The percentage of the slider (70 is the midpoint of 20 to 180)
+    fovSliderButton.Position = UDim2.new(fovPercentage, 0, 0, 0)
+
+    -- Update the FOV value display
+    fovValue.Text = "FOV: 70"
 end)
