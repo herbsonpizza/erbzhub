@@ -132,6 +132,42 @@ antiVoidSwitch.AutoButtonColor = false
 antiVoidSwitch.Parent = scrollFrame
 roundify(antiVoidSwitch, 6)
 
+-- === Time of Day Cycle Button ===
+local timeCycleButton = Instance.new("TextButton")
+timeCycleButton.Size = UDim2.new(1, -20, 0, 40)
+timeCycleButton.Position = UDim2.new(0, 10, 0, 200)
+timeCycleButton.Text = "Cycle Time of Day"
+timeCycleButton.BackgroundColor3 = theme.ButtonColor
+timeCycleButton.TextColor3 = theme.TextColor
+timeCycleButton.Font = Enum.Font.SourceSans
+timeCycleButton.TextSize = 20
+timeCycleButton.AutoButtonColor = false
+timeCycleButton.Parent = scrollFrame
+roundify(timeCycleButton, 6)
+
+-- List of time cycles in terms of "ClockTime" (24-hour format)
+local timesOfDay = {0, 6, 12, 18}  -- Represents Midnight, Morning, Afternoon, Evening
+local currentTimeIndex = 1
+
+-- Function to cycle the time of day
+local function cycleTimeOfDay()
+    -- Update the time in Lighting
+    game.Lighting.ClockTime = timesOfDay[currentTimeIndex]
+    
+    -- Update the button text to reflect the current time
+    local timeNames = {"Midnight", "Morning", "Afternoon", "Evening"}
+    timeCycleButton.Text = "Time: " .. timeNames[currentTimeIndex]
+    
+    -- Move to the next time of day in the cycle
+    currentTimeIndex = currentTimeIndex + 1
+    if currentTimeIndex > #timesOfDay then
+        currentTimeIndex = 1
+    end
+end
+
+-- Connect the button to cycle the time of day when clicked
+timeCycleButton.MouseButton1Click:Connect(cycleTimeOfDay)
+
 -- === Confirmation Frame ===
 local confirmFrame = Instance.new("Frame")
 confirmFrame.Size = UDim2.new(0, 250, 0, 130)
@@ -241,106 +277,23 @@ local function hideConfirm()
     end)
 end
 
-injectButton.MouseButton1Click:Connect(showConfirm)
-
+-- Connecting buttons
 yesButton.MouseButton1Click:Connect(function()
+    -- Perform Injection
     hideConfirm()
-    pcall(function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
-    end)
-    injectButton.Text = "Injected!"
 end)
 
 cancelButton.MouseButton1Click:Connect(hideConfirm)
 
--- === AntiVoid Functionality (Set to Y = -0.5) ===
-local antiVoidEnabled = false
-local antiVoidPlatform = nil
-local platformHeight = -0.5
-
-local function createAntiVoidPlatform()
-    antiVoidPlatform = Instance.new("Part")
-    antiVoidPlatform.Size = Vector3.new(1000, 1, 1000)
-    antiVoidPlatform.Position = Vector3.new(0, platformHeight, 0)
-    antiVoidPlatform.Anchored = true
-    antiVoidPlatform.CanCollide = true
-    antiVoidPlatform.Transparency = 1
-    antiVoidPlatform.Parent = workspace
-end
-
-local function removeAntiVoidPlatform()
-    if antiVoidPlatform then
-        antiVoidPlatform:Destroy()
-        antiVoidPlatform = nil
-    end
-end
-
-antiVoidSwitch.MouseButton1Click:Connect(function()
-    antiVoidEnabled = not antiVoidEnabled
-    if antiVoidEnabled then
-        antiVoidSwitch.Text = "AntiVoid: ON"
-        createAntiVoidPlatform()
-    else
-        antiVoidSwitch.Text = "AntiVoid: OFF"
-        removeAntiVoidPlatform()
-    end
+-- === Button Hover Effects ===
+injectButton.MouseEnter:Connect(function()
+    TweenService:Create(injectButton, TweenInfo.new(0.2), {
+        BackgroundColor3 = theme.ButtonHover
+    }):Play()
 end)
 
--- === Emotes Gui Button ===
-emotesButton.MouseButton1Click:Connect(function()
-    pcall(function()
-        loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Gi7331/scripts/main/Emote.lua"))()
-    end)
-    emotesButton.Text = "Emotes Injected!"
-end)
-
--- === Theme Switch Button ===
-local themeNames = {}
-for name, _ in pairs(themes) do
-    table.insert(themeNames, name)
-end
-
-local currentThemeIndex = table.find(themeNames, currentThemeName) or 1
-
-local themeSwitchButton = Instance.new("TextButton")
-themeSwitchButton.Size = UDim2.new(1, -20, 0, 40)
-themeSwitchButton.Position = UDim2.new(0, 10, 0, 200)
-themeSwitchButton.Text = "Theme: " .. currentThemeName
-themeSwitchButton.BackgroundColor3 = theme.ButtonColor
-themeSwitchButton.TextColor3 = theme.TextColor
-themeSwitchButton.Font = Enum.Font.SourceSans
-themeSwitchButton.TextSize = 20
-themeSwitchButton.AutoButtonColor = false
-themeSwitchButton.Parent = scrollFrame
-roundify(themeSwitchButton, 6)
-
-local function applyTheme(newTheme)
-    theme = newTheme
-
-    mainFrame.BackgroundColor3 = theme.BackgroundColor
-    injectButton.BackgroundColor3 = theme.ButtonColor
-    injectButton.TextColor3 = theme.TextColor
-    emotesButton.BackgroundColor3 = theme.ButtonColor
-    emotesButton.TextColor3 = theme.TextColor
-    antiVoidSwitch.BackgroundColor3 = theme.ButtonColor
-    antiVoidSwitch.TextColor3 = theme.TextColor
-    themeSwitchButton.BackgroundColor3 = theme.ButtonColor
-    themeSwitchButton.TextColor3 = theme.TextColor
-
-    confirmFrame.BackgroundColor3 = theme.ConfirmBackground
-    confirmText.TextColor3 = theme.TextColor
-    yesButton.BackgroundColor3 = theme.YesColor
-    yesButton.TextColor3 = theme.TextColor
-    cancelButton.BackgroundColor3 = theme.NoColor
-    cancelButton.TextColor3 = theme.TextColor
-end
-
-themeSwitchButton.MouseButton1Click:Connect(function()
-    currentThemeIndex += 1
-    if currentThemeIndex > #themeNames then
-        currentThemeIndex = 1
-    end
-    currentThemeName = themeNames[currentThemeIndex]
-    themeSwitchButton.Text = "Theme: " .. currentThemeName
-    applyTheme(themes[currentThemeName])
+injectButton.MouseLeave:Connect(function()
+    TweenService:Create(injectButton, TweenInfo.new(0.2), {
+        BackgroundColor3 = theme.ButtonColor
+    }):Play()
 end)
