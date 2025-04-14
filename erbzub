@@ -358,30 +358,21 @@ cycleTimeButton.AutoButtonColor = false
 cycleTimeButton.Parent = scrollFrame
 roundify(cycleTimeButton, 6)
 
--- === Time of Day Cycle Logic ===
-local function cycleTimeOfDay()
-    local currentTime = Lighting.ClockTime
+-- === Time of Day Set Logic ===
+local timesOfDay = {6, 12, 15, 18, 21}  -- Set times: 6 AM, 12 PM, 3 PM, 6 PM, 9 PM
+local currentTimeIndex = 1  -- Start at 6 AM (index 1)
 
-    -- Set the new time based on the current time
-    if currentTime >= 6 and currentTime < 12 then
-        -- If it's morning, set time to Noon (12:00)
-        Lighting.ClockTime = 12
-    elseif currentTime >= 12 and currentTime < 15 then
-        -- If it's noon, set time to Afternoon (3:00 PM)
-        Lighting.ClockTime = 15
-    elseif currentTime >= 15 and currentTime < 18 then
-        -- If it's afternoon, set time to Evening (6:00 PM)
-        Lighting.ClockTime = 18
-    elseif currentTime >= 18 and currentTime < 21 then
-        -- If it's evening, set time to Night (9:00 PM)
-        Lighting.ClockTime = 21
-    else
-        -- If it's night, set time to Morning (6:00 AM)
-        Lighting.ClockTime = 6
+local function setTimeOfDay()
+    -- Set the time based on the current index in the timesOfDay table
+    Lighting.ClockTime = timesOfDay[currentTimeIndex]
+
+    -- Update the index for the next time (cycle through the times)
+    currentTimeIndex = currentTimeIndex + 1
+    if currentTimeIndex > #timesOfDay then
+        currentTimeIndex = 1  -- Reset to 6 AM after 9 PM
     end
 end
 
 cycleTimeButton.MouseButton1Click:Connect(function()
-    cycleTimeOfDay()
+    setTimeOfDay()  -- Call the function to set the time
 end)
-nd)
