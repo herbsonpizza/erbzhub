@@ -117,19 +117,6 @@ emotesButton.AutoButtonColor = false
 emotesButton.Parent = scrollFrame
 roundify(emotesButton, 6)
 
--- === AntiVoid Switch ===
-local antiVoidSwitch = Instance.new("TextButton")
-antiVoidSwitch.Size = UDim2.new(1, -20, 0, 40)
-antiVoidSwitch.Position = UDim2.new(0, 10, 0, 150)
-antiVoidSwitch.Text = "AntiVoid: OFF"
-antiVoidSwitch.BackgroundColor3 = theme.ButtonColor
-antiVoidSwitch.TextColor3 = theme.TextColor
-antiVoidSwitch.Font = Enum.Font.SourceSans
-antiVoidSwitch.TextSize = 20
-antiVoidSwitch.AutoButtonColor = false
-antiVoidSwitch.Parent = scrollFrame
-roundify(antiVoidSwitch, 6)
-
 -- === Confirmation Frame (Shared for both buttons) ===
 local confirmFrame = Instance.new("Frame")
 confirmFrame.Size = UDim2.new(0, 250, 0, 130)
@@ -273,88 +260,4 @@ end)
 
 cancelButton.MouseButton1Click:Connect(function()
     hideConfirm()
-end)
-
--- === AntiVoid Functionality (Set to Y = -0.5) ===
-local antiVoidEnabled = false
-local antiVoidPlatform = nil
-local platformHeight = -0.5
-
-local function createAntiVoidPlatform()
-    antiVoidPlatform = Instance.new("Part")
-    antiVoidPlatform.Size = Vector3.new(1000, 1, 1000)
-    antiVoidPlatform.Position = Vector3.new(0, platformHeight, 0)
-    antiVoidPlatform.Anchored = true
-    antiVoidPlatform.CanCollide = true
-    antiVoidPlatform.Transparency = 1
-    antiVoidPlatform.Parent = workspace
-end
-
-local function removeAntiVoidPlatform()
-    if antiVoidPlatform then
-        antiVoidPlatform:Destroy()
-        antiVoidPlatform = nil
-    end
-end
-
-antiVoidSwitch.MouseButton1Click:Connect(function()
-    antiVoidEnabled = not antiVoidEnabled
-    if antiVoidEnabled then
-        antiVoidSwitch.Text = "AntiVoid: ON"
-        createAntiVoidPlatform()
-    else
-        antiVoidSwitch.Text = "AntiVoid: OFF"
-        removeAntiVoidPlatform()
-    end
-end)
-
--- === Theme Switch Button ===
-local themeNames = {}
-for name, _ in pairs(themes) do
-    table.insert(themeNames, name)
-end
-
-local currentThemeIndex = table.find(themeNames, currentThemeName) or 1
-
-local themeSwitchButton = Instance.new("TextButton")
-themeSwitchButton.Size = UDim2.new(1, -20, 0, 40)
-themeSwitchButton.Position = UDim2.new(0, 10, 0, 200)
-themeSwitchButton.Text = "Theme: " .. currentThemeName
-themeSwitchButton.BackgroundColor3 = theme.ButtonColor
-themeSwitchButton.TextColor3 = theme.TextColor
-themeSwitchButton.Font = Enum.Font.SourceSans
-themeSwitchButton.TextSize = 20
-themeSwitchButton.AutoButtonColor = false
-themeSwitchButton.Parent = scrollFrame
-roundify(themeSwitchButton, 6)
-
-local function applyTheme(newTheme)
-    theme = newTheme
-
-    mainFrame.BackgroundColor3 = theme.BackgroundColor
-    injectButton.BackgroundColor3 = theme.ButtonColor
-    injectButton.TextColor3 = theme.TextColor
-    emotesButton.BackgroundColor3 = theme.ButtonColor
-    emotesButton.TextColor3 = theme.TextColor
-    antiVoidSwitch.BackgroundColor3 = theme.ButtonColor
-    antiVoidSwitch.TextColor3 = theme.TextColor
-    themeSwitchButton.BackgroundColor3 = theme.ButtonColor
-    themeSwitchButton.TextColor3 = theme.TextColor
-
-    confirmFrame.BackgroundColor3 = theme.ConfirmBackground
-    confirmText.TextColor3 = theme.TextColor
-    yesButton.BackgroundColor3 = theme.YesColor
-    yesButton.TextColor3 = theme.TextColor
-    cancelButton.BackgroundColor3 = theme.NoColor
-    cancelButton.TextColor3 = theme.TextColor
-end
-
-themeSwitchButton.MouseButton1Click:Connect(function()
-    currentThemeIndex += 1
-    if currentThemeIndex > #themeNames then
-        currentThemeIndex = 1
-    end
-    currentThemeName = themeNames[currentThemeIndex]
-    themeSwitchButton.Text = "Theme: " .. currentThemeName
-    applyTheme(themes[currentThemeName])
 end)
