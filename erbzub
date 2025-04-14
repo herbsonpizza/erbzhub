@@ -73,10 +73,10 @@ blur.Size = 20
 blur.Enabled = false
 blur.Parent = Lighting
 
--- === Main Frame ===
+-- === Main Frame (Scrolling) ===
 local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0, 400, 0, 220)  -- Increased size (wider and taller)
-mainFrame.Position = UDim2.new(0.5, -200, 0.5, -110)  -- Centered with the new size
+mainFrame.Size = UDim2.new(0, 400, 0, 220)
+mainFrame.Position = UDim2.new(0.5, -200, 0.5, -110)
 mainFrame.BackgroundColor3 = theme.BackgroundColor
 mainFrame.BorderSizePixel = 0
 mainFrame.Active = true
@@ -84,49 +84,58 @@ mainFrame.Draggable = true
 mainFrame.Parent = screenGui
 roundify(mainFrame, 8)
 
+-- === Scrolling Frame ===
+local scrollFrame = Instance.new("ScrollingFrame")
+scrollFrame.Size = UDim2.new(1, 0, 1, 0)  -- Full height and width of the main frame
+scrollFrame.Position = UDim2.new(0, 0, 0, 0)
+scrollFrame.BackgroundTransparency = 1
+scrollFrame.CanvasSize = UDim2.new(0, 0, 0, 500)  -- Adjusted to make scrolling work
+scrollFrame.ScrollBarThickness = 6
+scrollFrame.Parent = mainFrame
+
 -- === Inject Infinite Yield Button ===
 local injectButton = Instance.new("TextButton")
-injectButton.Size = UDim2.new(1, -20, 0, 50)  -- Increased button size
-injectButton.Position = UDim2.new(0, 10, 0, 30)  -- Adjusted position
+injectButton.Size = UDim2.new(1, -20, 0, 50)
+injectButton.Position = UDim2.new(0, 10, 0, 30)
 injectButton.Text = "Inject Infinite Yield"
 injectButton.BackgroundColor3 = theme.ButtonColor
 injectButton.TextColor3 = theme.TextColor
 injectButton.Font = Enum.Font.SourceSans
-injectButton.TextSize = 22  -- Increased text size
+injectButton.TextSize = 22
 injectButton.AutoButtonColor = false
-injectButton.Parent = mainFrame
+injectButton.Parent = scrollFrame
 roundify(injectButton, 6)
 
 -- === Emotes Gui Button ===
 local emotesButton = Instance.new("TextButton")
-emotesButton.Size = UDim2.new(1, -20, 0, 50)  -- Increased button size
-emotesButton.Position = UDim2.new(0, 10, 0, 90)  -- Adjusted position
+emotesButton.Size = UDim2.new(1, -20, 0, 50)
+emotesButton.Position = UDim2.new(0, 10, 0, 90)
 emotesButton.Text = "Emotes Gui"
 emotesButton.BackgroundColor3 = theme.ButtonColor
 emotesButton.TextColor3 = theme.TextColor
 emotesButton.Font = Enum.Font.SourceSans
-emotesButton.TextSize = 22  -- Increased text size
+emotesButton.TextSize = 22
 emotesButton.AutoButtonColor = false
-emotesButton.Parent = mainFrame
+emotesButton.Parent = scrollFrame
 roundify(emotesButton, 6)
 
 -- === AntiVoid Switch ===
 local antiVoidSwitch = Instance.new("TextButton")
-antiVoidSwitch.Size = UDim2.new(1, -20, 0, 40)  -- Increased button size
-antiVoidSwitch.Position = UDim2.new(0, 10, 0, 150)  -- Adjusted position
+antiVoidSwitch.Size = UDim2.new(1, -20, 0, 40)
+antiVoidSwitch.Position = UDim2.new(0, 10, 0, 150)
 antiVoidSwitch.Text = "AntiVoid: OFF"
 antiVoidSwitch.BackgroundColor3 = theme.ButtonColor
 antiVoidSwitch.TextColor3 = theme.TextColor
 antiVoidSwitch.Font = Enum.Font.SourceSans
-antiVoidSwitch.TextSize = 20  -- Increased text size
+antiVoidSwitch.TextSize = 20
 antiVoidSwitch.AutoButtonColor = false
-antiVoidSwitch.Parent = mainFrame
+antiVoidSwitch.Parent = scrollFrame
 roundify(antiVoidSwitch, 6)
 
 -- === Confirmation Frame ===
 local confirmFrame = Instance.new("Frame")
-confirmFrame.Size = UDim2.new(0, 250, 0, 130)  -- Increased confirmation frame size
-confirmFrame.Position = UDim2.new(0.5, -125, 0.5, -65)  -- Centered with the new size
+confirmFrame.Size = UDim2.new(0, 250, 0, 130)
+confirmFrame.Position = UDim2.new(0.5, -125, 0.5, -65)
 confirmFrame.BackgroundColor3 = theme.ConfirmBackground
 confirmFrame.BorderSizePixel = 0
 confirmFrame.Visible = false
@@ -138,25 +147,25 @@ roundify(confirmFrame, 8)
 
 -- === Confirmation Text ===
 local confirmText = Instance.new("TextLabel")
-confirmText.Size = UDim2.new(1, -20, 0, 50)  -- Increased text size
+confirmText.Size = UDim2.new(1, -20, 0, 50)
 confirmText.Position = UDim2.new(0, 10, 0, 10)
 confirmText.Text = "Are you sure you want to inject?"
 confirmText.TextColor3 = theme.TextColor
 confirmText.Font = Enum.Font.SourceSans
-confirmText.TextSize = 20  -- Increased text size
+confirmText.TextSize = 20
 confirmText.BackgroundTransparency = 1
 confirmText.Parent = confirmFrame
 
 -- === Button Creator ===
 local function createButton(text, pos, colorKey)
     local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(0.4, 0, 0, 40)  -- Increased button size
+    btn.Size = UDim2.new(0.4, 0, 0, 40)
     btn.Position = pos
     btn.Text = text
     btn.BackgroundColor3 = theme[colorKey]
     btn.TextColor3 = theme.TextColor
     btn.Font = Enum.Font.SourceSans
-    btn.TextSize = 20  -- Increased text size
+    btn.TextSize = 20
     btn.AutoButtonColor = false
     btn.Parent = confirmFrame
     roundify(btn, 6)
@@ -247,16 +256,15 @@ cancelButton.MouseButton1Click:Connect(hideConfirm)
 -- === AntiVoid Functionality (Set to Y = -0.5) ===
 local antiVoidEnabled = false
 local antiVoidPlatform = nil
-local platformHeight = -0.5  -- Set to Y = -0.5
+local platformHeight = -0.5
 
 local function createAntiVoidPlatform()
-    -- Create a massive, completely invisible platform at the fixed height (Y = -0.5)
     antiVoidPlatform = Instance.new("Part")
-    antiVoidPlatform.Size = Vector3.new(1000, 1, 1000)  -- Massive size
-    antiVoidPlatform.Position = Vector3.new(0, platformHeight, 0)  -- Position at Y = -0.5
+    antiVoidPlatform.Size = Vector3.new(1000, 1, 1000)
+    antiVoidPlatform.Position = Vector3.new(0, platformHeight, 0)
     antiVoidPlatform.Anchored = true
-    antiVoidPlatform.CanCollide = true  -- Make it collidable so players can walk on it
-    antiVoidPlatform.Transparency = 1  -- Completely invisible
+    antiVoidPlatform.CanCollide = true
+    antiVoidPlatform.Transparency = 1
     antiVoidPlatform.Parent = workspace
 end
 
@@ -303,7 +311,7 @@ themeSwitchButton.TextColor3 = theme.TextColor
 themeSwitchButton.Font = Enum.Font.SourceSans
 themeSwitchButton.TextSize = 20
 themeSwitchButton.AutoButtonColor = false
-themeSwitchButton.Parent = mainFrame
+themeSwitchButton.Parent = scrollFrame
 roundify(themeSwitchButton, 6)
 
 local function applyTheme(newTheme)
