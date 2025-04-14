@@ -345,7 +345,7 @@ end)
 
 -- === Cycle Time of Day Button ===
 local cycleTimeButton = Instance.new("TextButton")
-cycleTimeButton.Size = UDim2.new(1, -20, 0, 50)
+cycleTimeButton.Size = UDim2.new(1, -20, 0, 50)  -- Same size as other buttons
 cycleTimeButton.Position = UDim2.new(0, 10, 0, 210)
 cycleTimeButton.Text = "Cycle Time of Day"
 cycleTimeButton.BackgroundColor3 = theme.ButtonColor
@@ -355,6 +355,7 @@ cycleTimeButton.TextSize = 22
 cycleTimeButton.AutoButtonColor = false
 cycleTimeButton.Parent = scrollFrame
 roundify(cycleTimeButton, 6)
+
 
 -- === Time Cycle Functionality ===
 local function cycleTimeOfDay()
