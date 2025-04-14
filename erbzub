@@ -395,7 +395,7 @@ local function applyTheme(newTheme)
     themeSwitchButton.BackgroundColor3 = theme.ButtonColor
     themeSwitchButton.TextColor3 = theme.TextColor
 
-    -- Update the Cycle Time of Day button color
+    -- Update the Cycle Time of Day button color (ensure it applies last)
     cycleTimeButton.BackgroundColor3 = theme.ButtonColor  -- Update background color
     cycleTimeButton.TextColor3 = theme.TextColor  -- Update text color
 
