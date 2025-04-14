@@ -343,48 +343,37 @@ themeSwitchButton.MouseButton1Click:Connect(function()
     applyTheme(themes[currentThemeName])
 end)
 
--- === Theme Presets ===
-local themes = {
-    Dark = {
-        BackgroundColor = Color3.fromRGB(20, 20, 20),
-        ButtonColor = Color3.fromRGB(30, 30, 30),
-        ButtonHover = Color3.fromRGB(45, 45, 45),
-        TextColor = Color3.new(1, 1, 1),
-        ConfirmBackground = Color3.fromRGB(25, 25, 25),
-        YesColor = Color3.fromRGB(40, 120, 40),
-        NoColor = Color3.fromRGB(120, 40, 40),
-    },
-    -- other themes...
-}
-
-local theme = themes["NeonBlue"]  -- Default theme
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "InjectorUI"
-screenGui.ResetOnSpawn = false
-screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-
-local scrollFrame = Instance.new("ScrollingFrame")
-scrollFrame.Size = UDim2.new(1, 0, 1, 0)
-scrollFrame.BackgroundTransparency = 1
-scrollFrame.CanvasSize = UDim2.new(0, 0, 0, 500)
-scrollFrame.ScrollBarThickness = 6
-scrollFrame.Parent = screenGui
-
 -- === Time of Day Button ===
 local timeOfDayButton = Instance.new("TextButton")
 timeOfDayButton.Size = UDim2.new(1, -20, 0, 50)
-timeOfDayButton.Position = UDim2.new(0, 10, 0, 180)  -- Adjusted position for a gap
+timeOfDayButton.Position = UDim2.new(0, 10, 0, 200)  -- Position it just below the AntiVoid button
 timeOfDayButton.Text = "Cycle Time of Day"
 timeOfDayButton.BackgroundColor3 = theme.ButtonColor
 timeOfDayButton.TextColor3 = theme.TextColor
 timeOfDayButton.Font = Enum.Font.SourceSans
 timeOfDayButton.TextSize = 22
 timeOfDayButton.AutoButtonColor = false
-timeOfDayButton.Parent = scrollFrame
--- Roundify function (for rounded corners)
-local function roundify(instance, radius)
-    local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0, radius)
-    corner.Parent = instance
-end
+timeOfDayButton.Parent = scrollFrame  -- Parent it to the main scroll frame
 roundify(timeOfDayButton, 6)
+
+-- === Time of Day Cycle Function ===
+local timeOfDayCycle = {
+    "14:00:00",  -- Daytime (2:00 PM)
+    "18:00:00",  -- Sunset (6:00 PM)
+    "00:00:00",  -- Night (12:00 AM)
+    "06:00:00",  -- Sunrise (6:00 AM)
+    "12:00:00",  -- Noon (12:00 PM)
+}
+
+local currentTimeIndex = 1  -- Start at Daytime (2:00 PM)
+
+local function cycleTimeOfDay()
+    currentTimeIndex = currentTimeIndex + 1
+    if currentTimeIndex > #timeOfDayCycle then
+        currentTimeIndex = 1  -- Reset to the first time in the cycle
+    end
+    Lighting.TimeOfDay = timeOfDayCycle[currentTimeIndex]  -- Set the new time of day
+    timeOfDayButton.Text = "Time: " .. timeOfDayCycle[currentTimeIndex]  -- Update the button text
+end
+
+timeOfDayButton.MouseButton1Click:Connect(cycleTimeOfDay)
