@@ -406,7 +406,7 @@ fovValue.Parent = scrollFrame
 -- Reset FOV Button
 local resetFovButton = Instance.new("TextButton")
 resetFovButton.Size = UDim2.new(0.8, 0, 0, 40)
-resetFovButton.Position = UDim2.new(0.1, 0, 0, 290)  -- Position it below the FOV slider
+resetFovButton.Position = UDim2.new(0.1, 0, 0, 300)  -- Position it below the FOV slider
 resetFovButton.Text = "Reset FOV"
 resetFovButton.BackgroundColor3 = theme.ButtonColor
 resetFovButton.TextColor3 = theme.TextColor
