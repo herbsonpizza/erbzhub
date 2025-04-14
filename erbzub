@@ -379,3 +379,39 @@ end
 cycleTimeButton.MouseButton1Click:Connect(function()
     setTimeOfDay()  -- Call the function to set the time
 end)
+
+-- === Update Button Colors When Theme Changes ===
+local function applyTheme(newTheme)
+    theme = newTheme
+
+    mainFrame.BackgroundColor3 = theme.BackgroundColor
+    injectButton.BackgroundColor3 = theme.ButtonColor
+    injectButton.TextColor3 = theme.TextColor
+    emotesButton.BackgroundColor3 = theme.ButtonColor
+    emotesButton.TextColor3 = theme.TextColor
+    antiVoidSwitch.BackgroundColor3 = theme.ButtonColor
+    antiVoidSwitch.TextColor3 = theme.TextColor
+    themeSwitchButton.BackgroundColor3 = theme.ButtonColor
+    themeSwitchButton.TextColor3 = theme.TextColor
+    cycleTimeButton.BackgroundColor3 = theme.ButtonColor  -- Update Cycle Time of Day button color
+    cycleTimeButton.TextColor3 = theme.TextColor  -- Update text color of the button
+
+    confirmFrame.BackgroundColor3 = theme.ConfirmBackground
+    confirmText.TextColor3 = theme.TextColor
+    yesButton.BackgroundColor3 = theme.YesColor
+    yesButton.TextColor3 = theme.TextColor
+    cancelButton.BackgroundColor3 = theme.NoColor
+    cancelButton.TextColor3 = theme.TextColor
+end
+
+-- Apply theme changes
+themeSwitchButton.MouseButton1Click:Connect(function()
+    currentThemeIndex += 1
+    if currentThemeIndex > #themeNames then
+        currentThemeIndex = 1
+    end
+    currentThemeName = themeNames[currentThemeIndex]
+    themeSwitchButton.Text = "Theme: " .. currentThemeName
+    applyTheme(themes[currentThemeName])
+end)
+
