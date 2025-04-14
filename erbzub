@@ -364,16 +364,19 @@ local function cycleTimeOfDay()
 
     -- Set the new time based on the current time
     if currentTime >= 6 and currentTime < 12 then
-        -- If it's morning, set time to Afternoon (12:00)
+        -- If it's morning, set time to Noon (12:00)
         Lighting.ClockTime = 12
-    elseif currentTime >= 12 and currentTime < 18 then
-        -- If it's afternoon, set time to Evening (18:00)
+    elseif currentTime >= 12 and currentTime < 15 then
+        -- If it's noon, set time to Afternoon (3:00 PM)
+        Lighting.ClockTime = 15
+    elseif currentTime >= 15 and currentTime < 18 then
+        -- If it's afternoon, set time to Evening (6:00 PM)
         Lighting.ClockTime = 18
     elseif currentTime >= 18 and currentTime < 21 then
-        -- If it's evening, set time to Night (21:00)
+        -- If it's evening, set time to Night (9:00 PM)
         Lighting.ClockTime = 21
     else
-        -- If it's night, set time to Morning (6:00)
+        -- If it's night, set time to Morning (6:00 AM)
         Lighting.ClockTime = 6
     end
 end
@@ -381,3 +384,4 @@ end
 cycleTimeButton.MouseButton1Click:Connect(function()
     cycleTimeOfDay()
 end)
+nd)
