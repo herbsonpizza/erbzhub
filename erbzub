@@ -84,7 +84,7 @@ mainFrame.Draggable = true
 mainFrame.Parent = screenGui
 roundify(mainFrame, 8)
 
--- === Inject Button ===
+-- === Inject Infinite Yield Button ===
 local injectButton = Instance.new("TextButton")
 injectButton.Size = UDim2.new(1, -20, 0, 50)  -- Increased button size
 injectButton.Position = UDim2.new(0, 10, 0, 30)  -- Adjusted position
@@ -97,10 +97,23 @@ injectButton.AutoButtonColor = false
 injectButton.Parent = mainFrame
 roundify(injectButton, 6)
 
+-- === Emotes Gui Button ===
+local emotesButton = Instance.new("TextButton")
+emotesButton.Size = UDim2.new(1, -20, 0, 50)  -- Increased button size
+emotesButton.Position = UDim2.new(0, 10, 0, 90)  -- Adjusted position
+emotesButton.Text = "Emotes Gui"
+emotesButton.BackgroundColor3 = theme.ButtonColor
+emotesButton.TextColor3 = theme.TextColor
+emotesButton.Font = Enum.Font.SourceSans
+emotesButton.TextSize = 22  -- Increased text size
+emotesButton.AutoButtonColor = false
+emotesButton.Parent = mainFrame
+roundify(emotesButton, 6)
+
 -- === AntiVoid Switch ===
 local antiVoidSwitch = Instance.new("TextButton")
 antiVoidSwitch.Size = UDim2.new(1, -20, 0, 40)  -- Increased button size
-antiVoidSwitch.Position = UDim2.new(0, 10, 0, 90)  -- Adjusted position
+antiVoidSwitch.Position = UDim2.new(0, 10, 0, 150)  -- Adjusted position
 antiVoidSwitch.Text = "AntiVoid: OFF"
 antiVoidSwitch.BackgroundColor3 = theme.ButtonColor
 antiVoidSwitch.TextColor3 = theme.TextColor
@@ -265,6 +278,14 @@ antiVoidSwitch.MouseButton1Click:Connect(function()
     end
 end)
 
+-- === Emotes Gui Button ===
+emotesButton.MouseButton1Click:Connect(function()
+    pcall(function()
+        loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Gi7331/scripts/main/Emote.lua"))()
+    end)
+    emotesButton.Text = "Emotes Injected!"
+end)
+
 -- === Theme Switch Button ===
 local themeNames = {}
 for name, _ in pairs(themes) do
@@ -275,7 +296,7 @@ local currentThemeIndex = table.find(themeNames, currentThemeName) or 1
 
 local themeSwitchButton = Instance.new("TextButton")
 themeSwitchButton.Size = UDim2.new(1, -20, 0, 40)
-themeSwitchButton.Position = UDim2.new(0, 10, 0, 140)
+themeSwitchButton.Position = UDim2.new(0, 10, 0, 200)
 themeSwitchButton.Text = "Theme: " .. currentThemeName
 themeSwitchButton.BackgroundColor3 = theme.ButtonColor
 themeSwitchButton.TextColor3 = theme.TextColor
@@ -291,6 +312,8 @@ local function applyTheme(newTheme)
     mainFrame.BackgroundColor3 = theme.BackgroundColor
     injectButton.BackgroundColor3 = theme.ButtonColor
     injectButton.TextColor3 = theme.TextColor
+    emotesButton.BackgroundColor3 = theme.ButtonColor
+    emotesButton.TextColor3 = theme.TextColor
     antiVoidSwitch.BackgroundColor3 = theme.ButtonColor
     antiVoidSwitch.TextColor3 = theme.TextColor
     themeSwitchButton.BackgroundColor3 = theme.ButtonColor
