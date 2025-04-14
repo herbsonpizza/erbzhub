@@ -384,6 +384,7 @@ end)
 local function applyTheme(newTheme)
     theme = newTheme
 
+    -- Update the main frame and other buttons
     mainFrame.BackgroundColor3 = theme.BackgroundColor
     injectButton.BackgroundColor3 = theme.ButtonColor
     injectButton.TextColor3 = theme.TextColor
@@ -393,9 +394,12 @@ local function applyTheme(newTheme)
     antiVoidSwitch.TextColor3 = theme.TextColor
     themeSwitchButton.BackgroundColor3 = theme.ButtonColor
     themeSwitchButton.TextColor3 = theme.TextColor
-    cycleTimeButton.BackgroundColor3 = theme.ButtonColor  -- Update Cycle Time of Day button color
-    cycleTimeButton.TextColor3 = theme.TextColor  -- Update text color of the button
 
+    -- Update the Cycle Time of Day button color
+    cycleTimeButton.BackgroundColor3 = theme.ButtonColor  -- Update background color
+    cycleTimeButton.TextColor3 = theme.TextColor  -- Update text color
+
+    -- Update confirmation frame
     confirmFrame.BackgroundColor3 = theme.ConfirmBackground
     confirmText.TextColor3 = theme.TextColor
     yesButton.BackgroundColor3 = theme.YesColor
@@ -412,6 +416,5 @@ themeSwitchButton.MouseButton1Click:Connect(function()
     end
     currentThemeName = themeNames[currentThemeIndex]
     themeSwitchButton.Text = "Theme: " .. currentThemeName
-    applyTheme(themes[currentThemeName])
+    applyTheme(themes[currentThemeName])  -- Ensure the theme changes properly
 end)
-
