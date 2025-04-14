@@ -5,7 +5,6 @@ local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local Lighting = game:GetService("Lighting")
 local RunService = game:GetService("RunService")
-local Camera = game:GetService("Workspace").CurrentCamera
 
 local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
@@ -74,10 +73,10 @@ blur.Size = 20
 blur.Enabled = false
 blur.Parent = Lighting
 
--- === Main Frame ===
+-- === Main Frame (Scrolling) ===
 local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0, 400, 0, 220)  -- Increased size (wider and taller)
-mainFrame.Position = UDim2.new(0.5, -200, 0.5, -110)  -- Centered with the new size
+mainFrame.Size = UDim2.new(0, 400, 0, 220)
+mainFrame.Position = UDim2.new(0.5, -200, 0.5, -110)
 mainFrame.BackgroundColor3 = theme.BackgroundColor
 mainFrame.BorderSizePixel = 0
 mainFrame.Active = true
@@ -85,111 +84,58 @@ mainFrame.Draggable = true
 mainFrame.Parent = screenGui
 roundify(mainFrame, 8)
 
--- === Inject Button ===
+-- === Scrolling Frame ===
+local scrollFrame = Instance.new("ScrollingFrame")
+scrollFrame.Size = UDim2.new(1, 0, 1, 0)  -- Full height and width of the main frame
+scrollFrame.Position = UDim2.new(0, 0, 0, 0)
+scrollFrame.BackgroundTransparency = 1
+scrollFrame.CanvasSize = UDim2.new(0, 0, 0, 500)  -- Adjusted to make scrolling work
+scrollFrame.ScrollBarThickness = 6
+scrollFrame.Parent = mainFrame
+
+-- === Inject Infinite Yield Button ===
 local injectButton = Instance.new("TextButton")
-injectButton.Size = UDim2.new(1, -20, 0, 50)  -- Increased button size
-injectButton.Position = UDim2.new(0, 10, 0, 30)  -- Adjusted position
+injectButton.Size = UDim2.new(1, -20, 0, 50)
+injectButton.Position = UDim2.new(0, 10, 0, 30)
 injectButton.Text = "Inject Infinite Yield"
 injectButton.BackgroundColor3 = theme.ButtonColor
 injectButton.TextColor3 = theme.TextColor
 injectButton.Font = Enum.Font.SourceSans
-injectButton.TextSize = 22  -- Increased text size
+injectButton.TextSize = 22
 injectButton.AutoButtonColor = false
-injectButton.Parent = mainFrame
+injectButton.Parent = scrollFrame
 roundify(injectButton, 6)
+
+-- === Emotes Gui Button ===
+local emotesButton = Instance.new("TextButton")
+emotesButton.Size = UDim2.new(1, -20, 0, 50)
+emotesButton.Position = UDim2.new(0, 10, 0, 90)
+emotesButton.Text = "Emotes Gui"
+emotesButton.BackgroundColor3 = theme.ButtonColor
+emotesButton.TextColor3 = theme.TextColor
+emotesButton.Font = Enum.Font.SourceSans
+emotesButton.TextSize = 22
+emotesButton.AutoButtonColor = false
+emotesButton.Parent = scrollFrame
+roundify(emotesButton, 6)
 
 -- === AntiVoid Switch ===
 local antiVoidSwitch = Instance.new("TextButton")
-antiVoidSwitch.Size = UDim2.new(1, -20, 0, 40)  -- Increased button size
-antiVoidSwitch.Position = UDim2.new(0, 10, 0, 90)  -- Adjusted position
+antiVoidSwitch.Size = UDim2.new(1, -20, 0, 40)
+antiVoidSwitch.Position = UDim2.new(0, 10, 0, 150)
 antiVoidSwitch.Text = "AntiVoid: OFF"
 antiVoidSwitch.BackgroundColor3 = theme.ButtonColor
 antiVoidSwitch.TextColor3 = theme.TextColor
 antiVoidSwitch.Font = Enum.Font.SourceSans
-antiVoidSwitch.TextSize = 20  -- Increased text size
+antiVoidSwitch.TextSize = 20
 antiVoidSwitch.AutoButtonColor = false
-antiVoidSwitch.Parent = mainFrame
+antiVoidSwitch.Parent = scrollFrame
 roundify(antiVoidSwitch, 6)
-
--- === FreeCam Button ===
-local freeCamButton = Instance.new("TextButton")
-freeCamButton.Size = UDim2.new(1, -20, 0, 40)
-freeCamButton.Position = UDim2.new(0, 10, 0, 150)  -- Adjusted position
-freeCamButton.Text = "FreeCam: OFF"
-freeCamButton.BackgroundColor3 = theme.ButtonColor
-freeCamButton.TextColor3 = theme.TextColor
-freeCamButton.Font = Enum.Font.SourceSans
-freeCamButton.TextSize = 20
-freeCamButton.AutoButtonColor = false
-freeCamButton.Parent = mainFrame
-roundify(freeCamButton, 6)
-
--- === FreeCam Variables ===
-local freeCamEnabled = false
-local freeCamCamera = Instance.new("Camera") -- Create a new camera for freecam
-local originalCamera = Camera
-local cameraOffset = Vector3.new(0, 5, 10) -- Offset from the player for freecam, adjust as necessary
-local moveSpeed = 50 -- Speed at which the freecam moves
-
--- === FreeCam Toggle Functionality ===
-local function toggleFreeCam()
-    freeCamEnabled = not freeCamEnabled
-    if freeCamEnabled then
-        Camera.CameraType = Enum.CameraType.Scriptable -- Switch to freecam
-        Camera.CFrame = character.HumanoidRootPart.CFrame -- Set camera to player’s current position
-        Camera.FieldOfView = 70 -- Optionally change the FOV for freecam
-        
-        freeCamButton.Text = "FreeCam: ON" -- Change button text
-        
-        -- Disable character controls (e.g., stop movement)
-        player.Character.HumanoidRootPart.Anchored = true
-    else
-        Camera.CameraType = Enum.CameraType.Custom -- Reset to normal camera mode
-        Camera.CFrame = originalCamera.CFrame -- Restore original camera position
-        freeCamButton.Text = "FreeCam: OFF" -- Change button text
-        
-        -- Re-enable character controls
-        player.Character.HumanoidRootPart.Anchored = false
-    end
-end
-
--- Toggle FreeCam on button click
-freeCamButton.MouseButton1Click:Connect(toggleFreeCam)
-
--- === FreeCam Movement ===
-local lastPosition = Camera.CFrame.Position
-local movementDirection = Vector3.new(0, 0, 0)
-
-RunService.RenderStepped:Connect(function(_, dt)
-    if freeCamEnabled then
-        -- Get movement input (WASD)
-        movementDirection = Vector3.new(
-            (UserInputService:IsKeyDown(Enum.KeyCode.W) and 1 or 0) - (UserInputService:IsKeyDown(Enum.KeyCode.S) and 1 or 0),
-            (UserInputService:IsKeyDown(Enum.KeyCode.Space) and 1 or 0) - (UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) and 1 or 0),
-            (UserInputService:IsKeyDown(Enum.KeyCode.A) and 1 or 0) - (UserInputService:IsKeyDown(Enum.KeyCode.D) and 1 or 0)
-        ).Unit
-
-        -- Move camera based on input
-        local newPosition = lastPosition + movementDirection * moveSpeed * dt
-        Camera.CFrame = CFrame.new(newPosition, Camera.CFrame.Position + Camera.CFrame.LookVector)
-        
-        -- Update the last position
-        lastPosition = Camera.CFrame.Position
-    end
-end)
-
--- === FreeCam Mouse Look ===
-UserInputService.MouseMovement:Connect(function(input)
-    if freeCamEnabled then
-        local delta = input.Delta
-        Camera.CFrame = Camera.CFrame * CFrame.Angles(0, -delta.X * 0.003, 0) * CFrame.Angles(-delta.Y * 0.003, 0, 0)
-    end
-end)
 
 -- === Confirmation Frame ===
 local confirmFrame = Instance.new("Frame")
-confirmFrame.Size = UDim2.new(0, 250, 0, 130)  -- Increased confirmation frame size
-confirmFrame.Position = UDim2.new(0.5, -125, 0.5, -65)  -- Centered with the new size
+confirmFrame.Size = UDim2.new(0, 250, 0, 130)
+confirmFrame.Position = UDim2.new(0.5, -125, 0.5, -65)
 confirmFrame.BackgroundColor3 = theme.ConfirmBackground
 confirmFrame.BorderSizePixel = 0
 confirmFrame.Visible = false
@@ -201,25 +147,25 @@ roundify(confirmFrame, 8)
 
 -- === Confirmation Text ===
 local confirmText = Instance.new("TextLabel")
-confirmText.Size = UDim2.new(1, -20, 0, 50)  -- Increased text size
+confirmText.Size = UDim2.new(1, -20, 0, 50)
 confirmText.Position = UDim2.new(0, 10, 0, 10)
 confirmText.Text = "Are you sure you want to inject?"
 confirmText.TextColor3 = theme.TextColor
 confirmText.Font = Enum.Font.SourceSans
-confirmText.TextSize = 20  -- Increased text size
+confirmText.TextSize = 20
 confirmText.BackgroundTransparency = 1
 confirmText.Parent = confirmFrame
 
 -- === Button Creator ===
 local function createButton(text, pos, colorKey)
     local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(0.4, 0, 0, 40)  -- Increased button size
+    btn.Size = UDim2.new(0.4, 0, 0, 40)
     btn.Position = pos
     btn.Text = text
     btn.BackgroundColor3 = theme[colorKey]
     btn.TextColor3 = theme.TextColor
     btn.Font = Enum.Font.SourceSans
-    btn.TextSize = 20  -- Increased text size
+    btn.TextSize = 20
     btn.AutoButtonColor = false
     btn.Parent = confirmFrame
     roundify(btn, 6)
@@ -307,30 +253,94 @@ end)
 
 cancelButton.MouseButton1Click:Connect(hideConfirm)
 
--- === AntiVoid Functionality ===
+-- === AntiVoid Functionality (Set to Y = -0.5) ===
 local antiVoidEnabled = false
 local antiVoidPlatform = nil
-local platformHeight = -0.5  -- Set to Y = -0.5
+local platformHeight = -0.5
 
 local function createAntiVoidPlatform()
-    -- Create a massive, completely invisible platform at the fixed height (Y = -0.5)
     antiVoidPlatform = Instance.new("Part")
     antiVoidPlatform.Size = Vector3.new(1000, 1, 1000)
     antiVoidPlatform.Position = Vector3.new(0, platformHeight, 0)
     antiVoidPlatform.Anchored = true
-    antiVoidPlatform.CanCollide = false
-    antiVoidPlatform.Parent = game.Workspace
+    antiVoidPlatform.CanCollide = true
+    antiVoidPlatform.Transparency = 1
+    antiVoidPlatform.Parent = workspace
+end
+
+local function removeAntiVoidPlatform()
+    if antiVoidPlatform then
+        antiVoidPlatform:Destroy()
+        antiVoidPlatform = nil
+    end
 end
 
 antiVoidSwitch.MouseButton1Click:Connect(function()
     antiVoidEnabled = not antiVoidEnabled
-    antiVoidSwitch.Text = antiVoidEnabled and "AntiVoid: ON" or "AntiVoid: OFF"
-
     if antiVoidEnabled then
+        antiVoidSwitch.Text = "AntiVoid: ON"
         createAntiVoidPlatform()
     else
-        if antiVoidPlatform then
-            antiVoidPlatform:Destroy()
-        end
+        antiVoidSwitch.Text = "AntiVoid: OFF"
+        removeAntiVoidPlatform()
     end
+end)
+
+-- === Emotes Gui Button ===
+emotesButton.MouseButton1Click:Connect(function()
+    pcall(function()
+        loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Gi7331/scripts/main/Emote.lua"))()
+    end)
+    emotesButton.Text = "Emotes Injected!"
+end)
+
+-- === Theme Switch Button ===
+local themeNames = {}
+for name, _ in pairs(themes) do
+    table.insert(themeNames, name)
+end
+
+local currentThemeIndex = table.find(themeNames, currentThemeName) or 1
+
+local themeSwitchButton = Instance.new("TextButton")
+themeSwitchButton.Size = UDim2.new(1, -20, 0, 40)
+themeSwitchButton.Position = UDim2.new(0, 10, 0, 200)
+themeSwitchButton.Text = "Theme: " .. currentThemeName
+themeSwitchButton.BackgroundColor3 = theme.ButtonColor
+themeSwitchButton.TextColor3 = theme.TextColor
+themeSwitchButton.Font = Enum.Font.SourceSans
+themeSwitchButton.TextSize = 20
+themeSwitchButton.AutoButtonColor = false
+themeSwitchButton.Parent = scrollFrame
+roundify(themeSwitchButton, 6)
+
+local function applyTheme(newTheme)
+    theme = newTheme
+
+    mainFrame.BackgroundColor3 = theme.BackgroundColor
+    injectButton.BackgroundColor3 = theme.ButtonColor
+    injectButton.TextColor3 = theme.TextColor
+    emotesButton.BackgroundColor3 = theme.ButtonColor
+    emotesButton.TextColor3 = theme.TextColor
+    antiVoidSwitch.BackgroundColor3 = theme.ButtonColor
+    antiVoidSwitch.TextColor3 = theme.TextColor
+    themeSwitchButton.BackgroundColor3 = theme.ButtonColor
+    themeSwitchButton.TextColor3 = theme.TextColor
+
+    confirmFrame.BackgroundColor3 = theme.ConfirmBackground
+    confirmText.TextColor3 = theme.TextColor
+    yesButton.BackgroundColor3 = theme.YesColor
+    yesButton.TextColor3 = theme.TextColor
+    cancelButton.BackgroundColor3 = theme.NoColor
+    cancelButton.TextColor3 = theme.TextColor
+end
+
+themeSwitchButton.MouseButton1Click:Connect(function()
+    currentThemeIndex += 1
+    if currentThemeIndex > #themeNames then
+        currentThemeIndex = 1
+    end
+    currentThemeName = themeNames[currentThemeIndex]
+    themeSwitchButton.Text = "Theme: " .. currentThemeName
+    applyTheme(themes[currentThemeName])
 end)
