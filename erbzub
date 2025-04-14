@@ -358,6 +358,9 @@ cycleTimeButton.AutoButtonColor = false
 cycleTimeButton.Parent = scrollFrame
 roundify(cycleTimeButton, 6)
 
+-- Set a higher ZIndex for this button to ensure it appears in front of others
+cycleTimeButton.ZIndex = 10
+
 -- === Time of Day Set Logic ===
 local timesOfDay = {6, 12, 15, 18, 21}  -- Set times: 6 AM, 12 PM, 3 PM, 6 PM, 9 PM
 local currentTimeIndex = 1  -- Start at 6 AM (index 1)
@@ -376,3 +379,4 @@ end
 cycleTimeButton.MouseButton1Click:Connect(function()
     setTimeOfDay()  -- Call the function to set the time
 end)
+
