@@ -345,36 +345,34 @@ end)
 
 -- === Cycle Time of Day Button ===
 local cycleTimeButton = Instance.new("TextButton")
-cycleTimeButton.Size = UDim2.new(1, -20, 0, 50)  -- Same size as other buttons
+cycleTimeButton.Size = UDim2.new(1, -20, 0, 50)  -- Set the size to match other buttons
 cycleTimeButton.Position = UDim2.new(0, 10, 0, 210)
 cycleTimeButton.Text = "Cycle Time of Day"
 cycleTimeButton.BackgroundColor3 = theme.ButtonColor
 cycleTimeButton.TextColor3 = theme.TextColor
 cycleTimeButton.Font = Enum.Font.SourceSans
 cycleTimeButton.TextSize = 22
+cycleTimeButton.TextWrapped = true  -- Wrap the text if needed
+cycleTimeButton.TextXAlignment = Enum.TextXAlignment.Center -- Center the text
 cycleTimeButton.AutoButtonColor = false
 cycleTimeButton.Parent = scrollFrame
 roundify(cycleTimeButton, 6)
 
-
--- === Time Cycle Functionality ===
+-- === Time of Day Cycle Logic ===
 local function cycleTimeOfDay()
+    local timesOfDay = {"Day", "Evening", "Night"}
     local currentTime = Lighting.ClockTime
-    
-    -- Cycle time between 0 (12:00 AM) to 24 (12:00 PM)
+
+    -- Set the new time
     if currentTime >= 6 and currentTime < 18 then
-        -- If daytime, set to evening
-        Lighting.ClockTime = 18
-    elseif currentTime >= 18 and currentTime < 24 then
-        -- If evening, set to night
-        Lighting.ClockTime = 0
+        Lighting.ClockTime = 18  -- Evening
+    elseif currentTime >= 18 and currentTime < 21 then
+        Lighting.ClockTime = 21  -- Night
     else
-        -- If night, set to morning
-        Lighting.ClockTime = 6
+        Lighting.ClockTime = 6  -- Day
     end
 end
 
--- Connect the button to cycle the time of day
 cycleTimeButton.MouseButton1Click:Connect(function()
     cycleTimeOfDay()
 end)
