@@ -286,19 +286,10 @@ end)
 
 -- === Emotes Gui Button ===
 emotesButton.MouseButton1Click:Connect(function()
-    showConfirm() -- Show the confirmation frame when the emotes button is clicked
-end)
-
-yesButton.MouseButton1Click:Connect(function()
-    hideConfirm() -- Hide confirmation dialog when user clicks Yes
     pcall(function()
         loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Gi7331/scripts/main/Emote.lua"))()
     end)
-    emotesButton.Text = "Emotes Injected!" -- Update button text to indicate success
-end)
-
-cancelButton.MouseButton1Click:Connect(function()
-    hideConfirm() -- Hide the confirmation dialog when user clicks Cancel
+    emotesButton.Text = "Emotes Injected!"
 end)
 
 -- === Theme Switch Button ===
