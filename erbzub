@@ -380,7 +380,7 @@ timeOfDayButton.MouseButton1Click:Connect(cycleTimeOfDay)
 -- === FOV Input Field ===
 local fovInputFrame = Instance.new("Frame")
 fovInputFrame.Size = UDim2.new(0.8, 0, 0, 60)
-fovInputFrame.Position = UDim2.new(0.1, 0, 0, 250)
+fovInputFrame.Position = UDim2.new(0.1, 0, 0, 320)  -- Adjusted the Y position to add gap
 fovInputFrame.BackgroundColor3 = theme.ButtonColor
 fovInputFrame.Parent = scrollFrame
 roundify(fovInputFrame, 5)
