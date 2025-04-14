@@ -342,3 +342,38 @@ themeSwitchButton.MouseButton1Click:Connect(function()
     themeSwitchButton.Text = "Theme: " .. currentThemeName
     applyTheme(themes[currentThemeName])
 end)
+
+-- === Time of Day Button ===
+local timeOfDayButton = Instance.new("TextButton")
+timeOfDayButton.Size = UDim2.new(1, -20, 0, 50)
+timeOfDayButton.Position = UDim2.new(0, 10, 0, 200)
+timeOfDayButton.Text = "Cycle Time of Day"
+timeOfDayButton.BackgroundColor3 = theme.ButtonColor
+timeOfDayButton.TextColor3 = theme.TextColor
+timeOfDayButton.Font = Enum.Font.SourceSans
+timeOfDayButton.TextSize = 22
+timeOfDayButton.AutoButtonColor = false
+timeOfDayButton.Parent = scrollFrame
+roundify(timeOfDayButton, 6)
+
+-- === Time of Day Cycle Function ===
+local timeOfDayCycle = {
+    "14:00:00",  -- Daytime (2:00 PM)
+    "18:00:00",  -- Sunset (6:00 PM)
+    "00:00:00",  -- Night (12:00 AM)
+    "06:00:00",  -- Sunrise (6:00 AM)
+    "12:00:00",  -- Noon (12:00 PM)
+}
+
+local currentTimeIndex = 1  -- Start at Daytime (2:00 PM)
+
+local function cycleTimeOfDay()
+    currentTimeIndex = currentTimeIndex + 1
+    if currentTimeIndex > #timeOfDayCycle then
+        currentTimeIndex = 1  -- Reset to the first time in the cycle
+    end
+    Lighting.TimeOfDay = timeOfDayCycle[currentTimeIndex]  -- Set the new time of day
+    timeOfDayButton.Text = "Time: " .. timeOfDayCycle[currentTimeIndex]  -- Update the button text
+end
+
+timeOfDayButton.MouseButton1Click:Connect(cycleTimeOfDay)
