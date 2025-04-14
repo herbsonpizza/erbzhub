@@ -360,19 +360,21 @@ roundify(cycleTimeButton, 6)
 
 -- === Time of Day Cycle Logic ===
 local function cycleTimeOfDay()
-    local timesOfDay = {"Day", "Evening", "Night"}
     local currentTime = Lighting.ClockTime
 
-    -- Set the new time
-    if currentTime >= 6 and currentTime < 18 then
-        Lighting.ClockTime = 18  -- Evening
+    -- Set the new time of day based on current time
+    if currentTime >= 6 and currentTime < 12 then
+        Lighting.ClockTime = 12  -- Afternoon (12:00 PM)
+    elseif currentTime >= 12 and currentTime < 18 then
+        Lighting.ClockTime = 18  -- Evening (6:00 PM)
     elseif currentTime >= 18 and currentTime < 21 then
-        Lighting.ClockTime = 21  -- Night
+        Lighting.ClockTime = 21  -- Night (9:00 PM)
     else
-        Lighting.ClockTime = 6  -- Day
+        Lighting.ClockTime = 6  -- Day (6:00 AM)
     end
 end
 
 cycleTimeButton.MouseButton1Click:Connect(function()
     cycleTimeOfDay()
 end)
+
