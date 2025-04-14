@@ -346,7 +346,7 @@ end)
 -- === Cycle Time of Day Button ===
 local cycleTimeButton = Instance.new("TextButton")
 cycleTimeButton.Size = UDim2.new(1, -20, 0, 50)  -- Set the size to match other buttons
-cycleTimeButton.Position = UDim2.new(0, 10, 0, 210)
+cycleTimeButton.Position = UDim2.new(0, 10, 0, 260)  -- Move it down further to avoid overlap
 cycleTimeButton.Text = "Cycle Time of Day"
 cycleTimeButton.BackgroundColor3 = theme.ButtonColor
 cycleTimeButton.TextColor3 = theme.TextColor
