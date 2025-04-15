@@ -343,37 +343,48 @@ themeSwitchButton.MouseButton1Click:Connect(function()
     applyTheme(themes[currentThemeName])
 end)
 
--- === Unsuspend Voice Chat Button ===
-local unsuspendButton = Instance.new("TextButton")
-unsuspendButton.Size = UDim2.new(1, -20, 0, 40)
-unsuspendButton.Position = UDim2.new(0, 10, 0, 250) -- Adjust Y if needed based on your layout
-unsuspendButton.Text = "Unsuspend Voice Chat"
-unsuspendButton.BackgroundColor3 = theme.ButtonColor
-unsuspendButton.TextColor3 = theme.TextColor
-unsuspendButton.Font = Enum.Font.SourceSans
-unsuspendButton.TextSize = 20
-unsuspendButton.AutoButtonColor = false
-unsuspendButton.Parent = scrollFrame
-roundify(unsuspendButton, 6)
+-- LocalScript inside StarterPlayerScripts
 
--- Hover Effect
-unsuspendButton.MouseEnter:Connect(function()
-    TweenService:Create(unsuspendButton, TweenInfo.new(0.2), {
-        BackgroundColor3 = theme.ButtonHover
-    }):Play()
-end)
-unsuspendButton.MouseLeave:Connect(function()
-    TweenService:Create(unsuspendButton, TweenInfo.new(0.2), {
-        BackgroundColor3 = theme.ButtonColor
-    }):Play()
+local Players = game:GetService("Players")
+local VoiceChatService = game:GetService("VoiceChatService")
+local StarterGui = game:GetService("StarterGui")
+
+-- UI Setup
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "VoiceChatRejoinGui"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
+
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(0, 200, 0, 50)
+button.Position = UDim2.new(0.5, -100, 0.8, 0)
+button.Text = "Rejoin Voice Chat"
+button.Visible = false
+button.Parent = screenGui
+
+button.MouseButton1Click:Connect(function()
+	pcall(function()
+		VoiceChatService:JoinVoice()
+		button.Visible = false
+	end)
 end)
 
--- Injection Behavior
-unsuspendButton.MouseButton1Click:Connect(function()
-    pcall(function()
-        game:GetService("VoiceChatService"):JoinVoice()
-    end)
-    unsuspendButton.Text = "Injected!"
-    task.wait(2)
-    unsuspendButton.Text = "Unsuspend Voice Chat"
+-- Monitor suspension status
+local function checkVoiceState()
+	local voiceState = VoiceChatService:GetVoiceChatState()
+
+	-- State 3 = Suspended, may vary depending on implementation
+	if voiceState == Enum.VoiceChatState.Suspended then
+		button.Visible = true
+	else
+		button.Visible = false
+	end
+end
+
+-- Listen for state changes
+VoiceChatService.StateChanged:Connect(function()
+	checkVoiceState()
 end)
+
+-- Initial check
+checkVoiceState()
