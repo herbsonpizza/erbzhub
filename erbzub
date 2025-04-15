@@ -367,7 +367,7 @@ end)
 -- === FOV Input Section ===
 local fovInputFrame = Instance.new("Frame")
 fovInputFrame.Size = UDim2.new(1, -20, 0, 100)
-fovInputFrame.Position = UDim2.new(0, 10, 0, 300) -- Increased position value to move it lower
+fovInputFrame.Position = UDim2.new(0, 10, 0, 380) -- Further down, after the other buttons
 fovInputFrame.BackgroundColor3 = theme.BackgroundColor
 fovInputFrame.BorderSizePixel = 0
 fovInputFrame.Parent = scrollFrame
@@ -400,7 +400,7 @@ applyFovButton.Parent = fovInputFrame
 roundify(applyFovButton, 6)
 
 -- === Adjust Canvas Size for Scrolling ===
-scrollFrame.CanvasSize = UDim2.new(0, 0, 0, 500 + fovInputFrame.Size.Y.Offset) -- Adjust canvas size to fit the new section
+scrollFrame.CanvasSize = UDim2.new(0, 0, 0, 550) -- Increase the canvas size to account for the extra space
 
 -- === FOV Apply Functionality ===
 applyFovButton.MouseButton1Click:Connect(function()
