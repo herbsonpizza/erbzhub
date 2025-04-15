@@ -343,48 +343,39 @@ themeSwitchButton.MouseButton1Click:Connect(function()
     applyTheme(themes[currentThemeName])
 end)
 
--- LocalScript inside StarterPlayerScripts
-
-local Players = game:GetService("Players")
+-- === Voice Chat Rejoin Button ===
 local VoiceChatService = game:GetService("VoiceChatService")
-local StarterGui = game:GetService("StarterGui")
 
--- UI Setup
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "VoiceChatRejoinGui"
-screenGui.ResetOnSpawn = false
-screenGui.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
+local voiceButton = Instance.new("TextButton")
+voiceButton.Size = UDim2.new(1, -20, 0, 40)
+voiceButton.Position = UDim2.new(0, 10, 0, 250) -- Adjusted for placement
+voiceButton.Text = "Rejoin Voice Chat"
+voiceButton.BackgroundColor3 = theme.ButtonColor
+voiceButton.TextColor3 = theme.TextColor
+voiceButton.Font = Enum.Font.SourceSans
+voiceButton.TextSize = 20
+voiceButton.AutoButtonColor = false
+voiceButton.Visible = false
+voiceButton.Parent = scrollFrame
+roundify(voiceButton, 6)
 
-local button = Instance.new("TextButton")
-button.Size = UDim2.new(0, 200, 0, 50)
-button.Position = UDim2.new(0.5, -100, 0.8, 0)
-button.Text = "Rejoin Voice Chat"
-button.Visible = false
-button.Parent = screenGui
-
-button.MouseButton1Click:Connect(function()
+voiceButton.MouseButton1Click:Connect(function()
 	pcall(function()
 		VoiceChatService:JoinVoice()
-		button.Visible = false
+		voiceButton.Text = "Attempted Rejoin"
+		voiceButton.Visible = false
 	end)
 end)
 
--- Monitor suspension status
+-- === Check and Handle Voice Suspension ===
 local function checkVoiceState()
 	local voiceState = VoiceChatService:GetVoiceChatState()
-
-	-- State 3 = Suspended, may vary depending on implementation
 	if voiceState == Enum.VoiceChatState.Suspended then
-		button.Visible = true
+		voiceButton.Visible = true
 	else
-		button.Visible = false
+		voiceButton.Visible = false
 	end
 end
 
--- Listen for state changes
-VoiceChatService.StateChanged:Connect(function()
-	checkVoiceState()
-end)
-
--- Initial check
+VoiceChatService.StateChanged:Connect(checkVoiceState)
 checkVoiceState()
