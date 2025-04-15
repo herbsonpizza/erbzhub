@@ -348,7 +348,7 @@ local VoiceChatService = game:GetService("VoiceChatService")
 
 local voiceButton = Instance.new("TextButton")
 voiceButton.Size = UDim2.new(1, -20, 0, 40)
-voiceButton.Position = UDim2.new(0, 10, 0, 250) -- Adjusted for placement
+voiceButton.Position = UDim2.new(0, 10, 0, 250) -- Placed directly under theme button
 voiceButton.Text = "Rejoin Voice Chat"
 voiceButton.BackgroundColor3 = theme.ButtonColor
 voiceButton.TextColor3 = theme.TextColor
