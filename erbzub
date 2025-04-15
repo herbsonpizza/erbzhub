@@ -343,38 +343,37 @@ themeSwitchButton.MouseButton1Click:Connect(function()
     applyTheme(themes[currentThemeName])
 end)
 
--- === Rejoin Voice Chat Button ===
-local rejoinVCButton = Instance.new("TextButton")
-rejoinVCButton.Size = UDim2.new(1, -20, 0, 40)
-rejoinVCButton.Position = UDim2.new(0, 10, 0, 250) -- Adjust this Y value if needed
-rejoinVCButton.Text = "Rejoin Voice Chat"
-rejoinVCButton.BackgroundColor3 = theme.ButtonColor
-rejoinVCButton.TextColor3 = theme.TextColor
-rejoinVCButton.Font = Enum.Font.SourceSans
-rejoinVCButton.TextSize = 20
-rejoinVCButton.AutoButtonColor = false
-rejoinVCButton.Parent = scrollFrame
-roundify(rejoinVCButton, 6)
+-- === Unsuspend Voice Chat Button ===
+local unsuspendButton = Instance.new("TextButton")
+unsuspendButton.Size = UDim2.new(1, -20, 0, 40)
+unsuspendButton.Position = UDim2.new(0, 10, 0, 250) -- Adjust Y if needed based on your layout
+unsuspendButton.Text = "Unsuspend Voice Chat"
+unsuspendButton.BackgroundColor3 = theme.ButtonColor
+unsuspendButton.TextColor3 = theme.TextColor
+unsuspendButton.Font = Enum.Font.SourceSans
+unsuspendButton.TextSize = 20
+unsuspendButton.AutoButtonColor = false
+unsuspendButton.Parent = scrollFrame
+roundify(unsuspendButton, 6)
 
--- Hover effect
-rejoinVCButton.MouseEnter:Connect(function()
-    TweenService:Create(rejoinVCButton, TweenInfo.new(0.2), {
+-- Hover Effect
+unsuspendButton.MouseEnter:Connect(function()
+    TweenService:Create(unsuspendButton, TweenInfo.new(0.2), {
         BackgroundColor3 = theme.ButtonHover
     }):Play()
 end)
-rejoinVCButton.MouseLeave:Connect(function()
-    TweenService:Create(rejoinVCButton, TweenInfo.new(0.2), {
+unsuspendButton.MouseLeave:Connect(function()
+    TweenService:Create(unsuspendButton, TweenInfo.new(0.2), {
         BackgroundColor3 = theme.ButtonColor
     }):Play()
 end)
 
--- Functionality
-rejoinVCButton.MouseButton1Click:Connect(function()
+-- Injection Behavior
+unsuspendButton.MouseButton1Click:Connect(function()
     pcall(function()
-        VoiceChatService:JoinVoice()
+        game:GetService("VoiceChatService"):JoinVoice()
     end)
-    rejoinVCButton.Text = "Rejoined!"
-    task.wait(1.5)
-    rejoinVCButton.Text = "Rejoin Voice Chat"
+    unsuspendButton.Text = "Injected!"
+    task.wait(2)
+    unsuspendButton.Text = "Unsuspend Voice Chat"
 end)
-
