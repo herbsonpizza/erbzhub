@@ -399,6 +399,9 @@ applyFovButton.AutoButtonColor = false
 applyFovButton.Parent = fovInputFrame
 roundify(applyFovButton, 6)
 
+-- === Adjust Canvas Size for Scrolling ===
+scrollFrame.CanvasSize = UDim2.new(0, 0, 0, 500 + fovInputFrame.Size.Y.Offset) -- Adjust canvas size to fit the new section
+
 -- === FOV Apply Functionality ===
 applyFovButton.MouseButton1Click:Connect(function()
     local fovValue = tonumber(fovInputBox.Text)
