@@ -363,54 +363,50 @@ unsuspendVCButton.MouseButton1Click:Connect(function()
     end)
     unsuspendVCButton.Text = "VC Unsuspended!"
 end)
+d)
 
--- === FOV Input Section ===
-local fovInputFrame = Instance.new("Frame")
-fovInputFrame.Size = UDim2.new(1, -20, 0, 100)
-fovInputFrame.Position = UDim2.new(0, 10, 0, 380) -- Further down, after the other buttons
-fovInputFrame.BackgroundColor3 = theme.BackgroundColor
-fovInputFrame.BorderSizePixel = 0
-fovInputFrame.Parent = scrollFrame
-roundify(fovInputFrame, 6)
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
--- === FOV Input TextBox ===
-local fovInputBox = Instance.new("TextBox")
-fovInputBox.Size = UDim2.new(1, -20, 0, 40)
-fovInputBox.Position = UDim2.new(0, 10, 0, 10)
-fovInputBox.PlaceholderText = "Enter FOV Value (60-120)"
-fovInputBox.BackgroundColor3 = theme.ButtonColor
-fovInputBox.TextColor3 = theme.TextColor
-fovInputBox.Font = Enum.Font.SourceSans
-fovInputBox.TextSize = 20
-fovInputBox.ClearTextOnFocus = false
-fovInputBox.Parent = fovInputFrame
-roundify(fovInputBox, 6)
+-- Create the TextBox
+local textBox = Instance.new("TextBox")
+textBox.Size = UDim2.new(0, 400, 0, 50)
+textBox.Position = UDim2.new(0.5, -200, 0.5, -100)
+textBox.PlaceholderText = "Enter text to spam"
+textBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+textBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+textBox.ClearTextOnFocus = false
+textBox.Parent = ScreenGui
 
--- === FOV Apply Button ===
-local applyFovButton = Instance.new("TextButton")
-applyFovButton.Size = UDim2.new(1, -20, 0, 40)
-applyFovButton.Position = UDim2.new(0, 10, 0, 60)
-applyFovButton.Text = "Apply FOV"
-applyFovButton.BackgroundColor3 = theme.ButtonColor
-applyFovButton.TextColor3 = theme.TextColor
-applyFovButton.Font = Enum.Font.SourceSans
-applyFovButton.TextSize = 20
-applyFovButton.AutoButtonColor = false
-applyFovButton.Parent = fovInputFrame
-roundify(applyFovButton, 6)
+-- Create the Button
+local spamButton = Instance.new("TextButton")
+spamButton.Text = "Start Spamming"
+spamButton.Size = UDim2.new(0, 200, 0, 50)
+spamButton.Position = UDim2.new(0.5, -100, 0.5, 50)
+spamButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+spamButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+spamButton.Parent = ScreenGui
 
--- === Adjust Canvas Size for Scrolling ===
-scrollFrame.CanvasSize = UDim2.new(0, 0, 0, 550) -- Increase the canvas size to account for the extra space
+local isSpamming = false
 
--- === FOV Apply Functionality ===
-applyFovButton.MouseButton1Click:Connect(function()
-    local fovValue = tonumber(fovInputBox.Text)
-    if fovValue and fovValue >= 60 and fovValue <= 120 then
-        game.Workspace.CurrentCamera.FieldOfView = fovValue
-        applyFovButton.Text = "FOV Applied!"
+-- Function to start/stop spamming
+local function toggleSpamming()
+    isSpamming = not isSpamming
+
+    if isSpamming then
+        spamButton.Text = "Stop Spamming"
+        -- Start spamming in chat
+        while isSpamming do
+            local message = textBox.Text
+            if message and message ~= "" then
+                game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents").SayMessageRequest:FireServer(message, "All")
+            end
+            wait(1)  -- Adjust the delay to control the spam speed
+        end
     else
-        applyFovButton.Text = "Invalid FOV (60-120)"
-        wait(1)
-        applyFovButton.Text = "Apply FOV"
+        spamButton.Text = "Start Spamming"
     end
-end)
+end
+
+-- Button click event to toggle spamming
+spamButton.MouseButton1Click:Connect(toggleSpamming)
