@@ -343,39 +343,38 @@ themeSwitchButton.MouseButton1Click:Connect(function()
     applyTheme(themes[currentThemeName])
 end)
 
--- === Voice Chat Rejoin Button ===
-local VoiceChatService = game:GetService("VoiceChatService")
+-- === Rejoin Voice Chat Button ===
+local rejoinVCButton = Instance.new("TextButton")
+rejoinVCButton.Size = UDim2.new(1, -20, 0, 40)
+rejoinVCButton.Position = UDim2.new(0, 10, 0, 250) -- Adjust this Y value if needed
+rejoinVCButton.Text = "Rejoin Voice Chat"
+rejoinVCButton.BackgroundColor3 = theme.ButtonColor
+rejoinVCButton.TextColor3 = theme.TextColor
+rejoinVCButton.Font = Enum.Font.SourceSans
+rejoinVCButton.TextSize = 20
+rejoinVCButton.AutoButtonColor = false
+rejoinVCButton.Parent = scrollFrame
+roundify(rejoinVCButton, 6)
 
-local rejoinVoiceButton = Instance.new("TextButton")
-rejoinVoiceButton.Name = "RejoinVoiceButton"
-rejoinVoiceButton.Size = UDim2.new(1, -20, 0, 40)
-rejoinVoiceButton.Position = UDim2.new(0, 10, 0, 260) -- Slightly below the theme button
-rejoinVoiceButton.Text = "Rejoin Voice Chat"
-rejoinVoiceButton.BackgroundColor3 = theme.ButtonColor
-rejoinVoiceButton.TextColor3 = theme.TextColor
-rejoinVoiceButton.Font = Enum.Font.SourceSans
-rejoinVoiceButton.TextSize = 20
-rejoinVoiceButton.AutoButtonColor = false
-rejoinVoiceButton.Visible = true -- Force visible for now
-rejoinVoiceButton.Parent = scrollFrame
-roundify(rejoinVoiceButton, 6)
-
--- === Voice Chat Join Logic ===
-rejoinVoiceButton.MouseButton1Click:Connect(function()
-	pcall(function()
-		VoiceChatService:JoinVoice()
-	end)
-	rejoinVoiceButton.Text = "Rejoin Attempted"
-	wait(2)
-	rejoinVoiceButton.Text = "Rejoin Voice Chat"
+-- Hover effect
+rejoinVCButton.MouseEnter:Connect(function()
+    TweenService:Create(rejoinVCButton, TweenInfo.new(0.2), {
+        BackgroundColor3 = theme.ButtonHover
+    }):Play()
+end)
+rejoinVCButton.MouseLeave:Connect(function()
+    TweenService:Create(rejoinVCButton, TweenInfo.new(0.2), {
+        BackgroundColor3 = theme.ButtonColor
+    }):Play()
 end)
 
--- === Optional: React to voice state
-local function updateVoiceButton()
-	local state = VoiceChatService:GetVoiceChatState()
-	print("Voice state:", state) -- DEBUG
-	rejoinVoiceButton.Visible = (state == Enum.VoiceChatState.Suspended)
-end
+-- Functionality
+rejoinVCButton.MouseButton1Click:Connect(function()
+    pcall(function()
+        VoiceChatService:JoinVoice()
+    end)
+    rejoinVCButton.Text = "Rejoined!"
+    task.wait(1.5)
+    rejoinVCButton.Text = "Rejoin Voice Chat"
+end)
 
-VoiceChatService.StateChanged:Connect(updateVoiceButton)
-updateVoiceButton()
