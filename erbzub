@@ -346,36 +346,34 @@ end)
 -- === Voice Chat Rejoin Button ===
 local VoiceChatService = game:GetService("VoiceChatService")
 
-local voiceButton = Instance.new("TextButton")
-voiceButton.Size = UDim2.new(1, -20, 0, 40)
-voiceButton.Position = UDim2.new(0, 10, 0, 250) -- Adjusted for placement
-voiceButton.Text = "Rejoin Voice Chat"
-voiceButton.BackgroundColor3 = theme.ButtonColor
-voiceButton.TextColor3 = theme.TextColor
-voiceButton.Font = Enum.Font.SourceSans
-voiceButton.TextSize = 20
-voiceButton.AutoButtonColor = false
-voiceButton.Visible = false
-voiceButton.Parent = scrollFrame
-roundify(voiceButton, 6)
+local rejoinVoiceButton = Instance.new("TextButton")
+rejoinVoiceButton.Size = UDim2.new(1, -20, 0, 40)
+rejoinVoiceButton.Position = UDim2.new(0, 10, 0, 250) -- Position below Theme button
+rejoinVoiceButton.Text = "Rejoin Voice Chat"
+rejoinVoiceButton.BackgroundColor3 = theme.ButtonColor
+rejoinVoiceButton.TextColor3 = theme.TextColor
+rejoinVoiceButton.Font = Enum.Font.SourceSans
+rejoinVoiceButton.TextSize = 20
+rejoinVoiceButton.AutoButtonColor = false
+rejoinVoiceButton.Visible = true -- Make it visible for testing
+rejoinVoiceButton.Parent = scrollFrame
+roundify(rejoinVoiceButton, 6)
 
-voiceButton.MouseButton1Click:Connect(function()
+-- === Voice Chat Join Logic ===
+rejoinVoiceButton.MouseButton1Click:Connect(function()
 	pcall(function()
 		VoiceChatService:JoinVoice()
-		voiceButton.Text = "Attempted Rejoin"
-		voiceButton.Visible = false
 	end)
+	rejoinVoiceButton.Text = "Rejoin Attempted"
+	wait(2)
+	rejoinVoiceButton.Text = "Rejoin Voice Chat"
 end)
 
--- === Check and Handle Voice Suspension ===
-local function checkVoiceState()
+-- === Auto-Show Button When Suspended ===
+local function updateVoiceButton()
 	local voiceState = VoiceChatService:GetVoiceChatState()
-	if voiceState == Enum.VoiceChatState.Suspended then
-		voiceButton.Visible = true
-	else
-		voiceButton.Visible = false
-	end
+	rejoinVoiceButton.Visible = (voiceState == Enum.VoiceChatState.Suspended)
 end
 
-VoiceChatService.StateChanged:Connect(checkVoiceState)
-checkVoiceState()
+VoiceChatService.StateChanged:Connect(updateVoiceButton)
+updateVoiceButton()
