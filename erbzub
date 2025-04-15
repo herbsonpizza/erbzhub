@@ -342,3 +342,40 @@ themeSwitchButton.MouseButton1Click:Connect(function()
     themeSwitchButton.Text = "Theme: " .. currentThemeName
     applyTheme(themes[currentThemeName])
 end)
+
+-- === Voice Chat Rejoin Button ===
+local VoiceChatService = game:GetService("VoiceChatService")
+
+local voiceButton = Instance.new("TextButton")
+voiceButton.Size = UDim2.new(1, -20, 0, 40)
+voiceButton.Position = UDim2.new(0, 10, 0, 250) -- Adjusted for placement
+voiceButton.Text = "Rejoin Voice Chat"
+voiceButton.BackgroundColor3 = theme.ButtonColor
+voiceButton.TextColor3 = theme.TextColor
+voiceButton.Font = Enum.Font.SourceSans
+voiceButton.TextSize = 20
+voiceButton.AutoButtonColor = false
+voiceButton.Visible = false
+voiceButton.Parent = scrollFrame
+roundify(voiceButton, 6)
+
+voiceButton.MouseButton1Click:Connect(function()
+	pcall(function()
+		VoiceChatService:JoinVoice()
+		voiceButton.Text = "Attempted Rejoin"
+		voiceButton.Visible = false
+	end)
+end)
+
+-- === Check and Handle Voice Suspension ===
+local function checkVoiceState()
+	local voiceState = VoiceChatService:GetVoiceChatState()
+	if voiceState == Enum.VoiceChatState.Suspended then
+		voiceButton.Visible = true
+	else
+		voiceButton.Visible = false
+	end
+end
+
+VoiceChatService.StateChanged:Connect(checkVoiceState)
+checkVoiceState()
