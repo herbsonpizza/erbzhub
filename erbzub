@@ -292,17 +292,30 @@ emotesButton.MouseButton1Click:Connect(function()
     emotesButton.Text = "Emotes Injected!"
 end)
 
+-- === Unsuspend VC Button ===
+local unsuspendVCButton = Instance.new("TextButton")
+unsuspendVCButton.Size = UDim2.new(1, -20, 0, 40)
+unsuspendVCButton.Position = UDim2.new(0, 10, 0, 200)
+unsuspendVCButton.Text = "Unsuspend VC"
+unsuspendVCButton.BackgroundColor3 = theme.ButtonColor
+unsuspendVCButton.TextColor3 = theme.TextColor
+unsuspendVCButton.Font = Enum.Font.SourceSans
+unsuspendVCButton.TextSize = 20
+unsuspendVCButton.AutoButtonColor = false
+unsuspendVCButton.Parent = scrollFrame
+roundify(unsuspendVCButton, 6)
+
+unsuspendVCButton.MouseButton1Click:Connect(function()
+    pcall(function()
+        game:GetService("VoiceChatService"):joinVoice()
+    end)
+    unsuspendVCButton.Text = "VC Unsuspended!"
+end)
+
 -- === Theme Switch Button ===
-local themeNames = {}
-for name, _ in pairs(themes) do
-    table.insert(themeNames, name)
-end
-
-local currentThemeIndex = table.find(themeNames, currentThemeName) or 1
-
 local themeSwitchButton = Instance.new("TextButton")
 themeSwitchButton.Size = UDim2.new(1, -20, 0, 40)
-themeSwitchButton.Position = UDim2.new(0, 10, 0, 200)
+themeSwitchButton.Position = UDim2.new(0, 10, 0, 250)
 themeSwitchButton.Text = "Theme: " .. currentThemeName
 themeSwitchButton.BackgroundColor3 = theme.ButtonColor
 themeSwitchButton.TextColor3 = theme.TextColor
@@ -312,6 +325,7 @@ themeSwitchButton.AutoButtonColor = false
 themeSwitchButton.Parent = scrollFrame
 roundify(themeSwitchButton, 6)
 
+-- === Theme Apply Function (add unsuspendVCButton here too) ===
 local function applyTheme(newTheme)
     theme = newTheme
 
@@ -324,6 +338,8 @@ local function applyTheme(newTheme)
     antiVoidSwitch.TextColor3 = theme.TextColor
     themeSwitchButton.BackgroundColor3 = theme.ButtonColor
     themeSwitchButton.TextColor3 = theme.TextColor
+    unsuspendVCButton.BackgroundColor3 = theme.ButtonColor
+    unsuspendVCButton.TextColor3 = theme.TextColor
 
     confirmFrame.BackgroundColor3 = theme.ConfirmBackground
     confirmText.TextColor3 = theme.TextColor
@@ -332,13 +348,3 @@ local function applyTheme(newTheme)
     cancelButton.BackgroundColor3 = theme.NoColor
     cancelButton.TextColor3 = theme.TextColor
 end
-
-themeSwitchButton.MouseButton1Click:Connect(function()
-    currentThemeIndex += 1
-    if currentThemeIndex > #themeNames then
-        currentThemeIndex = 1
-    end
-    currentThemeName = themeNames[currentThemeIndex]
-    themeSwitchButton.Text = "Theme: " .. currentThemeName
-    applyTheme(themes[currentThemeName])
-end)
