@@ -292,56 +292,47 @@ emotesButton.MouseButton1Click:Connect(function()
     emotesButton.Text = "Emotes Injected!"
 end)
 
--- === Unsuspend VC Button ===
-local unsuspendVCButton = Instance.new("TextButton")
-unsuspendVCButton.Size = UDim2.new(1, -20, 0, 40)
-unsuspendVCButton.Position = UDim2.new(0, 10, 0, 200)
-unsuspendVCButton.Text = "Unsuspend VC"
-unsuspendVCButton.BackgroundColor3 = theme.ButtonColor
-unsuspendVCButton.TextColor3 = theme.TextColor
-unsuspendVCButton.Font = Enum.Font.SourceSans
-unsuspendVCButton.TextSize = 20
-unsuspendVCButton.AutoButtonColor = false
-unsuspendVCButton.Parent = scrollFrame
-roundify(unsuspendVCButton, 6)
+-- === Theme Switch Button ===
+local themeSwitchButton = Instance.new("TextButton")
+themeSwitchButton.Size = UDim2.new(1, -20, 0, 40)
+themeSwitchButton.Position = UDim2.new(0, 10, 0, 200)
+themeSwitchButton.Text = "Theme: " .. currentThemeName
+themeSwitchButton.BackgroundColor3 = theme.ButtonColor
+themeSwitchButton.TextColor3 = theme.TextColor
+themeSwitchButton.Font = Enum.Font.SourceSans
+themeSwitchButton.TextSize = 20
+themeSwitchButton.AutoButtonColor = false
+themeSwitchButton.Parent = scrollFrame
+roundify(themeSwitchButton, 6)
 
-unsuspendVCButton.MouseButton1Click:Connect(function()
-    pcall(function()
-        game:GetService("VoiceChatService"):joinVoice()
-    end)
-    unsuspendVCButton.Text = "VC Unsuspended!"
-end)
-
--- Theme Switching
-local themeNames = {}
-for name in pairs(themes) do
-    table.insert(themeNames, name)
-end
-local currentThemeIndex = table.find(themeNames, currentThemeName) or 1
-
-local function applyTheme(newTheme)
-    theme = newTheme
-    mainFrame.BackgroundColor3 = theme.BackgroundColor
-    confirmFrame.BackgroundColor3 = theme.ConfirmBackground
-    confirmText.TextColor3 = theme.TextColor
-    yesButton.BackgroundColor3 = theme.YesColor
-    yesButton.TextColor3 = theme.TextColor
-    cancelButton.BackgroundColor3 = theme.NoColor
-    cancelButton.TextColor3 = theme.TextColor
-
-    local buttons = {injectButton, emotesButton, antiVoidSwitch, unsuspendVCButton, themeSwitchButton}
-    for _, btn in pairs(buttons) do
-        btn.BackgroundColor3 = theme.ButtonColor
-        btn.TextColor3 = theme.TextColor
-    end
-end
-
+-- Theme switching logic
 themeSwitchButton.MouseButton1Click:Connect(function()
     currentThemeIndex += 1
     if currentThemeIndex > #themeNames then
         currentThemeIndex = 1
     end
     currentThemeName = themeNames[currentThemeIndex]
+    theme = themes[currentThemeName]
     themeSwitchButton.Text = "Theme: " .. currentThemeName
-    applyTheme(themes[currentThemeName])
+
+    -- Apply theme to all components
+    mainFrame.BackgroundColor3 = theme.BackgroundColor
+    injectButton.BackgroundColor3 = theme.ButtonColor
+    injectButton.TextColor3 = theme.TextColor
+    emotesButton.BackgroundColor3 = theme.ButtonColor
+    emotesButton.TextColor3 = theme.TextColor
+    antiVoidSwitch.BackgroundColor3 = theme.ButtonColor
+    antiVoidSwitch.TextColor3 = theme.TextColor
+    unsuspendVCButton.BackgroundColor3 = theme.ButtonColor
+    unsuspendVCButton.TextColor3 = theme.TextColor
+    themeSwitchButton.BackgroundColor3 = theme.ButtonColor
+    themeSwitchButton.TextColor3 = theme.TextColor
+
+    confirmFrame.BackgroundColor3 = theme.ConfirmBackground
+    confirmText.TextColor3 = theme.TextColor
+    yesButton.BackgroundColor3 = theme.YesColor
+    yesButton.TextColor3 = theme.TextColor
+    cancelButton.BackgroundColor3 = theme.NoColor
+    cancelButton.TextColor3 = theme.TextColor
 end)
+nd)
